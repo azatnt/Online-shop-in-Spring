@@ -1,0 +1,195 @@
+
+<html xmlns:th = "http://www.thymeleaf.org">
+<head>
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <style>
+        body{
+            background-color: grey;
+        }
+
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/">E-shop</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-link" href="/admin">Brands</a>
+            <a class="nav-link" href="/countries">Countries</a>
+        </div>
+    </div>
+</nav>
+
+
+<div class="card">
+    <div class="card-header" style="display: flex; justify-content: space-between">
+        <div>
+
+        </div>
+        <div>
+            <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal">ADD NEW</button>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col"></th>
+
+                <th scope="col">Id</th>
+
+                <th scope="col"></th>
+
+
+                <th scope="col">Name</th>
+                <th scope="col"></th>
+                <th scope="col">Country</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr th:each="bnd: ${brands}">
+                <td scope="row"></td>
+                <td scope="row"></td>
+
+                <td scope="row" th:text="${bnd.id}"></td>
+                <td scope="row"></td>
+
+                <td scope="row" th:text="${bnd.name}"></td>
+                <td scope="row"></td>
+                <td scope="row" th:text="${bnd.country.name}"></td>
+
+                <td style="display: flex;">
+                    <a th:href="@{'/admin_brand_detail/' + ${bnd.id}}">
+                        <button class="btn btn-info">
+                            Detail
+                        </button>
+                    </a>
+<!--                    <div>-->
+<!--                        <button class="btn btn-primary" data-toggle="modal" data-target="#editModal">EDIT</button>-->
+<!--                    </div>-->
+<!--                    <div style="margin-left: 8px;">-->
+<!--                        <button class="btn btn-danger" data-toggle="modal" data-target="#delete<%=n.getId()%>">DELETE</button>-->
+<!--                    </div>-->
+                </td>
+            </tr>
+            </tbody>
+
+            <div class="modal fade" id="editModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Edit News</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+
+                            <form action="/editNews" method="post">
+                                <input type="hidden" name="id" value="<%=n.getId()%>">
+                                <div class="form-group ">
+                                    <label class="control-label " for="title"> Title </label>
+                                    <input class="form-control" value="<%=n.getTitle()%>"  name="title" type="text"/>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="font-weight: bold;">Cancel</button>
+                                    <button class="btn btn-primary" style="font-weight: bold;">EDIT</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal fade" id="delete<%=n.getId()%>">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Delete News</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+
+                            <form action="/deleteNews" method="post">
+                                <input type="hidden" name="id" value="<%=n.getId()%>">
+                                <div class="form-group ">
+                                    <label class="control-label " for="title"> Title </label>
+                                    <input class="form-control" value="<%=n.getTitle()%>"  name="title" type="text"/>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="font-weight: bold;">Cancel</button>
+                                    <button class="btn btn-primary" style="font-weight: bold;">Delete</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </table>
+    </div>
+</div>
+
+
+
+<!-- The Modal -->
+<div class="modal fade" id="exampleModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Add News</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{'/addBrand'}" method="post">
+                    <div class="form-group ">
+                        <label class="control-label " for="title"> Name </label>
+                        <input class="form-control" id="title"  name="name" type="text"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            Country
+                        </label>
+                        <select class="form-control" name="country_id" id="">
+                            <option th:each="bnd : ${countries}" th:text="${bnd.name}" th:value="${bnd.id}"></option>
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" name="add" value="add" class="btn btn-success">ADD</button>
+                        <button type="submit" name="close" value="close" class="btn btn-secondary">CLOSE</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+</body>
+</html>
