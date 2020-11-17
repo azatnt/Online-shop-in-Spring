@@ -22,6 +22,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
+            <a class="nav-link" href="/allItems">All Items</a>
             <a class="nav-link" href="/admin">Brands</a>
             <a class="nav-link" href="/countries">Countries</a>
             <a class="nav-link" href="/categories">Categories</a>
@@ -29,6 +30,14 @@
     </div>
 </nav>
 
+<style>
+    ul{
+        list-style-type: none;
+    }
+    .category{
+        display: block;
+    }
+</style>
 
 <div class="card">
     <div class="card-header" style="display: flex; justify-content: space-between">
@@ -46,21 +55,18 @@
             <tr>
                 <th scope="col"></th>
                 <th scope="col"></th>
-
                 <th scope="col">Id</th>
-
                 <th scope="col"></th>
-
-
                 <th scope="col">Name</th>
                 <th scope="col"></th>
-                <th scope="col">Code</th>
-
+                <th scope="col">Brand</th>
+                <th scope="col"></th>
+                <th scope="col">Price</th>
             </tr>
             </thead>
             <tbody>
 
-            <tr th:each="bnd: ${countries}">
+            <tr th:each="bnd: ${items}">
                 <td scope="row"></td>
                 <td scope="row"></td>
 
@@ -69,12 +75,12 @@
 
                 <td scope="row" th:text="${bnd.name}"></td>
                 <td scope="row"></td>
-                <td scope="row" th:text="${bnd.code}"></td>
-
+                <td scope="row" th:text="${bnd.brand.name}"></td>
                 <td scope="row"></td>
+                <td scope="row" th:text="${bnd.price}"></td>
 
                 <td style="display: flex;">
-                    <a th:href="@{'/admin_country_detail/' + ${bnd.id}}">
+                    <a th:href="@{'/admin_items_detail/' + ${bnd.id}}">
                         <button class="btn btn-info">
                             Detail
                         </button>
@@ -89,38 +95,34 @@
             </tr>
             </tbody>
 
-<!--            <div class="modal fade" id="editModal">-->
-<!--                <div class="modal-dialog">-->
-<!--                    <div class="modal-content">-->
+            <div class="modal fade" id="editModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
 
-<!--                        &lt;!&ndash; Modal Header &ndash;&gt;-->
-<!--                        <div class="modal-header">-->
-<!--                            <h4 class="modal-title">Edit News</h4>-->
-<!--                            <button type="button" class="close" data-dismiss="modal">&times;</button>-->
-<!--                        </div>-->
-<!--                        <div class="modal-body">-->
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Edit News</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
 
-<!--                            <form action="/editCountry" method="post">-->
-<!--                                <input type="hidden" name="id" value="<%=n.getId()%>">-->
-<!--                                <div class="form-group ">-->
-<!--                                    <label class="control-label " for="title"> Name </label>-->
-<!--                                    <input class="form-control" value="<%=n.getTitle()%>"  name="title" type="text"/>-->
-<!--                                </div>-->
-<!--                                <div class="form-group ">-->
-<!--                                    <label class="control-label " for="title"> Code </label>-->
-<!--                                    <input class="form-control" th:value="${bnd.c}"  name="title" type="text"/>-->
-<!--                                </div>-->
+                            <form action="/editNews" method="post">
+                                <input type="hidden" name="id" value="<%=n.getId()%>">
+                                <div class="form-group ">
+                                    <label class="control-label " for="title"> Title </label>
+                                    <input class="form-control" value="<%=n.getTitle()%>"  name="title" type="text"/>
+                                </div>
 
-<!--                                <div class="modal-footer">-->
-<!--                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="font-weight: bold;">Cancel</button>-->
-<!--                                    <button class="btn btn-primary" style="font-weight: bold;">EDIT</button>-->
-<!--                                </div>-->
-<!--                            </form>-->
-<!--                        </div>-->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="font-weight: bold;">Cancel</button>
+                                    <button class="btn btn-primary" style="font-weight: bold;">EDIT</button>
+                                </div>
+                            </form>
+                        </div>
 
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+                    </div>
+                </div>
+            </div>
 
 
             <div class="modal fade" id="delete<%=n.getId()%>">
@@ -158,7 +160,6 @@
 </div>
 
 
-
 <!-- The Modal -->
 <div class="modal fade" id="exampleModal">
     <div class="modal-dialog">
@@ -166,23 +167,92 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title">Add News</h4>
+                <h4 class="modal-title" th:text="#{button.add_item}"></h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form th:action="@{'/addCountry'}" method="post">
-                    <div class="form-group ">
-                        <label class="control-label " for="title"> Name </label>
-                        <input class="form-control" id="title"  name="name" type="text"/>
+                <form th:action="@{'/addTask'}" method="post">
+                    <div class="form-group">
+                        <label th:text="#{label.name}">
+                        </label>
+                        <input type="text" class="form-control" name="name">
                     </div>
-                    <div class="form-group ">
-                        <label class="control-label " for="title"> Code </label>
-                        <input class="form-control" id="code"  name="code" type="text"/>
+                    <div class="form-group">
+                        <label th:text="#{label.description}">
+                        </label>
+                        <input type="text" class="form-control" name="description">
+
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{label.price}">
+                        </label>
+                        <input type="integer" class="form-control" name="price">
+
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{label.amount}">
+                        </label>
+                        <input type="integer" class="form-control" name="amount">
+
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{label.rating}">
+                        </label>
+                        <input type="integer" class="form-control" name="rating" >
+
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{label.large_picture}">
+                        </label>
+                        <input type="text" class="form-control" name="large_picture" >
+
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{label.small_picture}">
+                        </label>
+                        <input type="text" class="form-control" name="small_picture" >
                     </div>
 
-                    <div class="modal-footer">
-                        <button type="submit" name="add" value="add" class="btn btn-success">ADD</button>
-                        <button type="submit" name="close" value="close" class="btn btn-secondary">CLOSE</button>
+                    <div class="form-group ">
+                        <label class="control-label requiredField" for="inTop">
+                            Is in Top?
+                            <span class="asteriskField">
+        *
+       </span>
+                        </label>
+                        <select class="select form-control" id="inTop" name="inTop">
+                            <option value="Yes">
+                                Yes
+                            </option>
+                            <option value="No">
+                                No
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            Brand
+                        </label>
+                        <select class="form-control" name="brand_id">
+                            <option th:each="bnd : ${brands}" th:text="${bnd.name}" th:value="${bnd.id}"></option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label >Categories</label>
+                        <ul>
+                            <li th:each="cat: ${categories}">
+                                <input type="checkbox" name="cat" th:value="${cat.id}"/>
+                                <label th:text="${cat.name}"></label>
+
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-success" type="submit" th:text="#{button.add_item}"></button>
                     </div>
                 </form>
             </div>

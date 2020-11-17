@@ -86,13 +86,13 @@
                                 <p class="card-text" th:text="${item.description}"></p>
                                 <h5 class="card-title" th:text="${item.price} + '$'"></h5>
                                 <p class="card-text" th:text="'rating' + ${item.stars}"><small class="text-muted"></small></p>
-                                <div>
-                                    <button name="id" class="btn btn-info" data-toggle="modal" data-target="#editModal" th:text="#{button.edit}"></button>
-                                </div>
-                                <form th:action="@{'/deleteItem'}" method="post">
-                                    <input type="hidden" name="id" th:value="${item.id}">
-                                    <button type="submit" class="btn btn-danger" th:text="#{button.delete_item}"></button>
-                                </form>
+<!--                                <div>-->
+<!--                                    <button name="id" class="btn btn-info" data-toggle="modal" data-target="#editModal" th:text="#{button.edit}"></button>-->
+<!--                                </div>-->
+<!--                                <form th:action="@{'/deleteItem'}" method="post">-->
+<!--                                    <input type="hidden" name="id" th:value="${item.id}">-->
+<!--                                    <button type="submit" class="btn btn-danger" th:text="#{button.delete_item}"></button>-->
+<!--                                </form>-->
                             </div>
                         </div>
 
@@ -183,6 +183,27 @@
                                             </div>
 
                                         </form>
+
+
+
+                                        <div class="row mt-5">
+                                            <div class="col-6 offset-3">
+                                                <table class="table table-striped">
+                                                    <tbody>
+                                                    <tr th:each="cat: ${categories}">
+                                                        <form th:action="@{'/assigncategory'}" method="post">
+                                                            <input type="hidden" name="id" th:value="${item.id}">
+                                                            <input type="hidden" name="category_id" th:value="${cat.id}">
+                                                            <td th:text="${cat.name}"></td>
+                                                            <td style="display: flex" width="10%">
+                                                                <button class="btn btn-success btn-sm"> + </button>
+                                                            </td>
+                                                        </form>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </div>

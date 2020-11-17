@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.db.DBManager;
 import com.example.demo.db.ShopItem;
 import com.example.demo.entities.Brands;
+import com.example.demo.entities.Categories;
 import com.example.demo.entities.Countries;
 import com.example.demo.entities.Items;
 import com.example.demo.repositories.BrandRepository;
@@ -65,7 +66,8 @@ public class HomeController {
                           @RequestParam(name = "small_picture") String small_picture,
                           @RequestParam(name = "large_picture") String large_picture,
                           @RequestParam(name = "inTop") String inTop,
-                          @RequestParam(name = "brand_id") Long id)
+                          @RequestParam(name = "brand_id") Long id,
+                          @RequestParam(name = "cat") List<Long> catId)
 
     {
 
@@ -84,53 +86,56 @@ public class HomeController {
 
         if(bnd!=null) {
 
-
+            ArrayList<Categories> categories = new ArrayList<>();
+            for(Long cat: catId){
+                categories.add(itemsService.getCategory(cat));
+            }
             itemsService.addItem(new Items(null, name, description, price,
                     amount, rating, small_picture,
-                    large_picture, date_added, InTop, bnd));
+                    large_picture, date_added, InTop, bnd, categories));
         }
-        return "redirect:/";
+        return "redirect:/allItems";
     }
 
 
-    @PostMapping(value = "/saveTask")
-    public String saveTask(@RequestParam(name = "id") Long id,
-                          @RequestParam(name = "name") String name,
-                          @RequestParam(name = "description") String description,
-                          @RequestParam(name = "price") int price,
-                          @RequestParam(name = "amount") int amount,
-                          @RequestParam(name = "rating") int rating,
-                           @RequestParam(name = "small_picture") String small_picture,
-                           @RequestParam(name = "large_picture") String large_picture,
-                           @RequestParam(name = "inTop") String inTop,
-                           @RequestParam(name = "brand_id") Long brandId)
-    {
-        boolean InTop = false;
-
-        if (inTop.equals("Yes")) {
-            InTop = true;
-        }
-
-        Items items = itemsService.getItem(id);
-        if (items!=null){
-
-            Brands brands = itemsService.getBrand(brandId);
-
-            if(brands!=null) {
-            items.setName(name);
-            items.setDescription(description);
-            items.setPrice(price);
-            items.setAmount(amount);
-            items.setStars(rating);
-            items.setSmall_picture_url(small_picture);
-            items.setLarge_picture_url(large_picture);
-            items.setInTop(InTop);
-            items.setBrand(brands);
-            itemsService.saveItem(items);
-            }
-        }
-        return "redirect:/";
-    }
+//    @PostMapping(value = "/saveTask")
+//    public String saveTask(@RequestParam(name = "id") Long id,
+//                          @RequestParam(name = "name") String name,
+//                          @RequestParam(name = "description") String description,
+//                          @RequestParam(name = "price") int price,
+//                          @RequestParam(name = "amount") int amount,
+//                          @RequestParam(name = "rating") int rating,
+//                           @RequestParam(name = "small_picture") String small_picture,
+//                           @RequestParam(name = "large_picture") String large_picture,
+//                           @RequestParam(name = "inTop") String inTop,
+//                           @RequestParam(name = "brand_id") Long brandId)
+//    {
+//        boolean InTop = false;
+//
+//        if (inTop.equals("Yes")) {
+//            InTop = true;
+//        }
+//
+//        Items items = itemsService.getItem(id);
+//        if (items!=null){
+//
+//            Brands brands = itemsService.getBrand(brandId);
+//
+//            if(brands!=null) {
+//            items.setName(name);
+//            items.setDescription(description);
+//            items.setPrice(price);
+//            items.setAmount(amount);
+//            items.setStars(rating);
+//            items.setSmall_picture_url(small_picture);
+//            items.setLarge_picture_url(large_picture);
+//            items.setInTop(InTop);
+//            items.setBrand(brands);
+//            itemsService.saveItem(items);
+//            }
+//        }
+//        return "redirect:/";
+//    }
 
     @PostMapping(value = "/deleteItem")
     public String deleteItem(@RequestParam(name = "id") Long id) {
@@ -138,7 +143,7 @@ public class HomeController {
         if (items!=null){
             itemsService.deleteItem(items);
         }
-        return "redirect:/";
+        return "redirect:/allItems";
     }
 
     @GetMapping(value = "/detail/{id}")
@@ -148,6 +153,11 @@ public class HomeController {
 
         List<Brands> brands = itemsService.getAllBrands();
         model.addAttribute("brands", brands);
+
+
+        List<Categories> categories = itemsService.getAllCategories();
+        model.addAttribute("categories", categories);
+
 
         return "details";
     }
@@ -180,30 +190,45 @@ public class HomeController {
         List<Items> item = null;
 
 
+        List<Brands> brands = itemsService.getAllBrands();
 
+
+//        if(order.equals("as") && priceFrom==0 && priceTo==0) {
+//            item = itemsService.findAllByNameLikeOrderByPriceAsc(name);
+//        }
+//        else if(order.equals("des") && priceFrom==0 && priceTo==0){
+//            item = itemsService.findAllByNameLikeOrderByPriceDesc(name);
+//        }
+//        else if(!name.equals("") && order.equals("as") && priceFrom>0 && priceTo>0){
+//            item = itemsService.filterPriceAsc(name, priceFrom, priceTo);
+//        }
+//        else if(!name.equals("") && order.equals("des") && priceFrom>0 && priceTo>0){
+//            item = itemsService.filterPriceDesc(name, priceFrom, priceTo);
+//        }
         if(order.equals("as") && priceFrom==0 && priceTo==0){
             item = itemsService.findAllByBrandId(id);
         }
-        else if(order.equals("as") && priceFrom==0 && priceTo==0) {
-            item = itemsService.findAllByNameLikeOrderByPriceAsc(name);
+        else if(!name.equals("") && order.equals("des") && priceFrom==0 && priceTo==0){
+            item = itemsService.findAllByBrandId(id);
         }
-        else if(order.equals("des") && priceFrom==0 && priceTo==0){
-            item = itemsService.findAllByNameLikeOrderByPriceDesc(name);
+        else if(priceFrom>0 && priceTo>0 && order.equals("as")){
+            item = itemsService.findAllByBrandIdAndPriceAsc(id, priceFrom, priceTo);
         }
-        else if(order.equals("as") && priceFrom>0 && priceTo>0){
-            item = itemsService.filterPriceAsc(name, priceFrom, priceTo);
+        else if(priceFrom>0 && priceTo>0 && order.equals("des")){
+            item = itemsService.findAllByBrandIdAndPriceDesc(id, priceFrom, priceTo);
         }
-        else if(order.equals("des") && priceFrom>0 && priceTo>0){
-            item = itemsService.filterPriceDesc(name, priceFrom, priceTo);
-        }
+//        else if(priceFrom>0 && priceTo>0 && order.equals("as")){
+//            item = itemsService.filterPriceAsc(name, priceFrom, priceTo);
+//        }
 
 
 
+        model.addAttribute("brands", brands);
 
 
 
         model.addAttribute("item", item);
-        return "filtered";
+        return "result";
     }
 
 
@@ -328,5 +353,234 @@ public class HomeController {
         }
         return "redirect:/countries";
     }
+
+    @PostMapping(value = "/assigncategory")
+    public String assignCategory(@RequestParam(name = "id") Long id,
+                                 @RequestParam(name = "category_id") Long cat_id)
+    {
+        Categories categories = itemsService.getCategory(cat_id);
+        if(categories!=null){
+            Items items = itemsService.getItem(id);
+            if(items!=null){
+                List<Categories> categories1 = items.getCategories();
+                if(categories1==null ){
+                    categories1 = new ArrayList<>();
+                }
+                categories1.add(categories);
+
+                itemsService.saveItem(items);
+                return "redirect:/admin_items_detail/"+id;
+
+            }
+        }
+        return "redirect:/allItems";
+    }
+
+
+    @PostMapping(value = "/removecategory")
+    public String removeCategory(@RequestParam(name = "id") Long id,
+                                 @RequestParam(name = "category_id") Long cat_id)
+    {
+        Categories categories = itemsService.getCategory(cat_id);
+        if(categories!=null){
+            Items items = itemsService.getItem(id);
+            if(items!=null){
+                List<Categories> categories1 = items.getCategories();
+                if(categories1==null ){
+                    categories1 = new ArrayList<>();
+                }
+                categories1.remove(categories);
+
+                itemsService.saveItem(items);
+                return "redirect:/admin_items_detail/"+id;
+
+            }
+        }
+        return "redirect:/allItems";
+    }
+
+
+
+
+
+
+
+//    @PostMapping(value = "/deleteCategory")
+//    public String deleteCategory(@RequestParam(name = "id") Long id,
+//                                 @RequestParam(name = "category_id") Long cat_id)
+//    {
+//        Categories categories = itemsService.getCategory(cat_id);
+//        if(categories!=null){
+//            Items items = itemsService.getItem(id);
+//            if(items!=null){
+//                itemsService.deleteCategory(categories);
+//                return "redirect:/detail/"+id;
+//
+//            }
+//        }
+//        return "redirect:/";
+//    }
+
+
+
+    @GetMapping(value = "/categories")
+    public String adminCategory(Model model) {
+
+        List<Categories> categories = itemsService.getAllCategories();
+        model.addAttribute("categories", categories);
+
+        return "category";
+    }
+
+
+    @PostMapping(value = "/addCategory")
+    public String addCategory(@RequestParam(name = "name") String name,
+                           @RequestParam(name = "logo_url") String logo_url)
+    {
+
+        itemsService.addCategory(new Categories(null, name, logo_url));
+
+        return "redirect:/categories";
+    }
+
+
+
+    @GetMapping(value = "/admin_category_detail/{id}")
+    public String admin_category_detail(Model model, @PathVariable(name = "id") Long id) {
+        Categories categories = itemsService.getCategory(id);
+        model.addAttribute("category", categories);
+        return "category_detail";
+    }
+
+
+    @PostMapping(value = "/saveCategory")
+    public String saveCategory(@RequestParam(name = "id") Long id,
+                              @RequestParam(name = "name") String name,
+                              @RequestParam(name = "logo_url") String logo_url)
+    {
+
+
+
+        Categories categories = itemsService.getCategory(id);
+        if (categories!=null){
+            categories.setName(name);
+            categories.setLogo_url(logo_url);
+            itemsService.saveCategory(categories);
+        }
+        return "redirect:/categories";
+    }
+
+
+    @PostMapping(value = "/deleteCategory")
+    public String deleteCategory(@RequestParam(name = "id") Long id) {
+        Categories categories = itemsService.getCategory(id);
+        if (categories!=null){
+            itemsService.deleteCategory(categories);
+        }
+        return "redirect:/categories";
+    }
+
+
+
+    @GetMapping(value = "/allItems")
+    public String adminItems(Model model) {
+
+
+        List<Categories> categories = itemsService.getAllCategories();
+        model.addAttribute("categories", categories);
+
+        List<Items> items = itemsService.getAllItems();
+        model.addAttribute("items", items);
+
+        List<Brands> brands = itemsService.getAllBrands();
+        model.addAttribute("brands", brands);
+
+        return "admin_allItems";
+    }
+
+
+    @GetMapping(value = "/admin_items_detail/{id}")
+    public String admin_items_detail(Model model, @PathVariable(name = "id") Long id) {
+        Items items = itemsService.getItem(id);
+        model.addAttribute("items", items);
+
+        List<Brands> brands = itemsService.getAllBrands();
+        model.addAttribute("brands", brands);
+
+
+        List<Categories> categories = itemsService.getAllCategories();
+        model.addAttribute("categories", categories);
+
+        categories.removeIf(x -> items.getCategories().contains(x));
+
+
+        return "item_detail";
+    }
+
+
+
+//    @GetMapping("/admin_items_detail/{Id}")
+//    public String item_details(Model model, @PathVariable(value = "Id") Long id){
+//        Items item = itemsService.getItem(id);
+//        if (item != null) {
+//            List<Brands> brands = itemsService.getAllBrands();
+//            model.addAttribute("brands", brands);
+//            model.addAttribute("item", item);
+//            List<Categories> categories = itemsService.getAllCategories();
+//
+//            categories.removeIf(x -> item.getCategories().contains(x));
+//
+//            model.addAttribute("categories", categories);
+//
+//            return "details_item";
+//        }
+//        else {
+//            return "redirect:/admin_items";
+//        }
+//    }
+
+
+
+    @PostMapping(value = "/saveItem")
+    public String saveItem(@RequestParam(name = "id") Long id,
+                           @RequestParam(name = "name") String name,
+                           @RequestParam(name = "description") String description,
+                           @RequestParam(name = "price") int price,
+                           @RequestParam(name = "amount") int amount,
+                           @RequestParam(name = "rating") int rating,
+                           @RequestParam(name = "small_picture") String small_picture,
+                           @RequestParam(name = "large_picture") String large_picture,
+                           @RequestParam(name = "inTop") String inTop,
+                           @RequestParam(name = "brand_id") Long brandId)
+    {
+        boolean InTop = false;
+
+        if (inTop.equals("Yes")) {
+            InTop = true;
+        }
+
+        Items items = itemsService.getItem(id);
+        if (items!=null){
+
+            Brands brands = itemsService.getBrand(brandId);
+
+            if(brands!=null) {
+                items.setName(name);
+                items.setDescription(description);
+                items.setPrice(price);
+                items.setAmount(amount);
+                items.setStars(rating);
+                items.setSmall_picture_url(small_picture);
+                items.setLarge_picture_url(large_picture);
+                items.setInTop(InTop);
+                items.setBrand(brands);
+                itemsService.saveItem(items);
+            }
+        }
+        return "redirect:/allItems";
+    }
+
+
+
 
 }

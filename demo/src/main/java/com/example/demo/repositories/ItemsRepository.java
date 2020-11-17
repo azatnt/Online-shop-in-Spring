@@ -20,4 +20,7 @@ public interface ItemsRepository extends JpaRepository<Items, Long> {
     List<Items> findAllByNameLikeAndPriceBetweenOrderByPriceAsc(String name, int priceFrom, int priceTo);
     List<Items> findAllByNameLikeAndPriceBetweenOrderByPriceDesc(String name, int priceFrom, int priceTo);
     List<Items> findAllByBrandId(Long id);
+    List<Items> findAllByBrandIdAndPriceBetweenOrderByPriceAsc(Long id, int priceFrom, int priceTo);
+    List<Items> findAllByBrandIdAndPriceBetweenOrderByPriceDesc(Long id, int priceFrom, int priceTo);
+
 }

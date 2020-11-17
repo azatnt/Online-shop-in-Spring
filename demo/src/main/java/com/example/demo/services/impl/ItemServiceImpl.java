@@ -1,9 +1,11 @@
 package com.example.demo.services.impl;
 
 import com.example.demo.entities.Brands;
+import com.example.demo.entities.Categories;
 import com.example.demo.entities.Countries;
 import com.example.demo.entities.Items;
 import com.example.demo.repositories.BrandRepository;
+import com.example.demo.repositories.CategoryRepository;
 import com.example.demo.repositories.CountryRepository;
 import com.example.demo.repositories.ItemsRepository;
 import com.example.demo.services.ItemsService;
@@ -23,6 +25,9 @@ public class ItemServiceImpl implements ItemsService {
 
     @Autowired
     private CountryRepository countryRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Override
     public Items addItem(Items item) {
@@ -140,6 +145,45 @@ public class ItemServiceImpl implements ItemsService {
     @Override
     public List<Items> findAllByBrandId(Long id) {
         return itemsRepository.findAllByBrandId(id);
+    }
+
+
+    @Override
+    public List<Items> findAllByBrandIdAndPriceAsc(Long id, int priceFrom, int priceTo) {
+        return itemsRepository.findAllByBrandIdAndPriceBetweenOrderByPriceAsc(id, priceFrom, priceTo);
+    }
+
+
+    @Override
+    public List<Items> findAllByBrandIdAndPriceDesc(Long id, int priceFrom, int priceTo) {
+        return itemsRepository.findAllByBrandIdAndPriceBetweenOrderByPriceDesc(id, priceFrom, priceTo);
+    }
+
+
+    @Override
+    public List<Categories> getAllCategories() {
+        return categoryRepository.findAll();
+    }
+
+    @Override
+    public Categories getCategory(Long id) {
+        return categoryRepository.getOne(id);
+    }
+
+    @Override
+    public Categories saveCategory(Categories category) {
+        return categoryRepository.save(category);
+    }
+
+    @Override
+    public Categories addCategory(Categories category) {
+        return categoryRepository.save(category);
+    }
+
+    @Override
+    public void deleteCategory(Categories category) {
+        categoryRepository.delete(category);
+
     }
 
 

@@ -54,13 +54,13 @@
 
                 <th scope="col">Name</th>
                 <th scope="col"></th>
-                <th scope="col">Code</th>
+                <th scope="col">Logo_url</th>
 
             </tr>
             </thead>
             <tbody>
 
-            <tr th:each="bnd: ${countries}">
+            <tr th:each="bnd: ${categories}">
                 <td scope="row"></td>
                 <td scope="row"></td>
 
@@ -69,12 +69,12 @@
 
                 <td scope="row" th:text="${bnd.name}"></td>
                 <td scope="row"></td>
-                <td scope="row" th:text="${bnd.code}"></td>
+                <td scope="row" th:text="${bnd.logo_url}"></td>
 
                 <td scope="row"></td>
 
                 <td style="display: flex;">
-                    <a th:href="@{'/admin_country_detail/' + ${bnd.id}}">
+                    <a th:href="@{'/admin_category_detail/' + ${bnd.id}}">
                         <button class="btn btn-info">
                             Detail
                         </button>
@@ -89,38 +89,38 @@
             </tr>
             </tbody>
 
-<!--            <div class="modal fade" id="editModal">-->
-<!--                <div class="modal-dialog">-->
-<!--                    <div class="modal-content">-->
+            <!--            <div class="modal fade" id="editModal">-->
+            <!--                <div class="modal-dialog">-->
+            <!--                    <div class="modal-content">-->
 
-<!--                        &lt;!&ndash; Modal Header &ndash;&gt;-->
-<!--                        <div class="modal-header">-->
-<!--                            <h4 class="modal-title">Edit News</h4>-->
-<!--                            <button type="button" class="close" data-dismiss="modal">&times;</button>-->
-<!--                        </div>-->
-<!--                        <div class="modal-body">-->
+            <!--                        &lt;!&ndash; Modal Header &ndash;&gt;-->
+            <!--                        <div class="modal-header">-->
+            <!--                            <h4 class="modal-title">Edit News</h4>-->
+            <!--                            <button type="button" class="close" data-dismiss="modal">&times;</button>-->
+            <!--                        </div>-->
+            <!--                        <div class="modal-body">-->
 
-<!--                            <form action="/editCountry" method="post">-->
-<!--                                <input type="hidden" name="id" value="<%=n.getId()%>">-->
-<!--                                <div class="form-group ">-->
-<!--                                    <label class="control-label " for="title"> Name </label>-->
-<!--                                    <input class="form-control" value="<%=n.getTitle()%>"  name="title" type="text"/>-->
-<!--                                </div>-->
-<!--                                <div class="form-group ">-->
-<!--                                    <label class="control-label " for="title"> Code </label>-->
-<!--                                    <input class="form-control" th:value="${bnd.c}"  name="title" type="text"/>-->
-<!--                                </div>-->
+            <!--                            <form action="/editCountry" method="post">-->
+            <!--                                <input type="hidden" name="id" value="<%=n.getId()%>">-->
+            <!--                                <div class="form-group ">-->
+            <!--                                    <label class="control-label " for="title"> Name </label>-->
+            <!--                                    <input class="form-control" value="<%=n.getTitle()%>"  name="title" type="text"/>-->
+            <!--                                </div>-->
+            <!--                                <div class="form-group ">-->
+            <!--                                    <label class="control-label " for="title"> Code </label>-->
+            <!--                                    <input class="form-control" th:value="${bnd.c}"  name="title" type="text"/>-->
+            <!--                                </div>-->
 
-<!--                                <div class="modal-footer">-->
-<!--                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="font-weight: bold;">Cancel</button>-->
-<!--                                    <button class="btn btn-primary" style="font-weight: bold;">EDIT</button>-->
-<!--                                </div>-->
-<!--                            </form>-->
-<!--                        </div>-->
+            <!--                                <div class="modal-footer">-->
+            <!--                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="font-weight: bold;">Cancel</button>-->
+            <!--                                    <button class="btn btn-primary" style="font-weight: bold;">EDIT</button>-->
+            <!--                                </div>-->
+            <!--                            </form>-->
+            <!--                        </div>-->
 
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
 
 
             <div class="modal fade" id="delete<%=n.getId()%>">
@@ -170,14 +170,14 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form th:action="@{'/addCountry'}" method="post">
+                <form th:action="@{'/addCategory'}" method="post">
                     <div class="form-group ">
                         <label class="control-label " for="title"> Name </label>
                         <input class="form-control" id="title"  name="name" type="text"/>
                     </div>
                     <div class="form-group ">
-                        <label class="control-label " for="title"> Code </label>
-                        <input class="form-control" id="code"  name="code" type="text"/>
+                        <label class="control-label " for="title"> Logo_url </label>
+                        <input class="form-control" id="logo_url"  name="logo_url" type="text"/>
                     </div>
 
                     <div class="modal-footer">

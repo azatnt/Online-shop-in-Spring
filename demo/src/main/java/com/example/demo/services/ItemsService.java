@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.Brands;
+import com.example.demo.entities.Categories;
 import com.example.demo.entities.Countries;
 import com.example.demo.entities.Items;
 
@@ -32,5 +33,15 @@ public interface ItemsService {
     void deleteCountry(Countries country);
 
     List<Items> findAllByBrandId(Long id);
+    List<Items> findAllByBrandIdAndPriceAsc(Long id, int priceFrom, int priceTo);
+    List<Items> findAllByBrandIdAndPriceDesc(Long id, int priceFrom, int priceTo);
+//    List<Items> findAllByBrandNameAndPriceAsc(String name)
+
+
+    List<Categories> getAllCategories();
+    Categories getCategory(Long id);
+    Categories saveCategory(Categories category);
+    Categories addCategory(Categories category);
+    void deleteCategory(Categories category);
 
 }
