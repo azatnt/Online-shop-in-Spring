@@ -71,30 +71,30 @@
                 <th scope="col"></th>
                 <th scope="col">Id</th>
                 <th scope="col"></th>
-                <th scope="col">Name</th>
+                <th scope="col">Email</th>
                 <th scope="col"></th>
-                <th scope="col">Brand</th>
+                <th scope="col">Full Name</th>
                 <th scope="col"></th>
-                <th scope="col">Price</th>
+                <th scope="col">Role</th>
             </tr>
             </thead>
             <tbody>
 
-            <tr th:each="bnd: ${items}">
+            <tr th:each="bnd: ${users}">
                 <td scope="row"></td>
                 <td scope="row"></td>
 
                 <td scope="row" th:text="${bnd.id}"></td>
                 <td scope="row"></td>
 
-                <td scope="row" th:text="${bnd.name}"></td>
+                <td scope="row" th:text="${bnd.email}"></td>
                 <td scope="row"></td>
-                <td scope="row" th:text="${bnd.brand.name}"></td>
+                <td scope="row" th:text="${bnd.fullName}"></td>
                 <td scope="row"></td>
-                <td scope="row" th:text="${bnd.price}"></td>
+                <td scope="row" th:text="${bnd.roles}"></td>
 
                 <td style="display: flex;">
-                    <a th:href="@{'/admin_items_detail/' + ${bnd.id}}">
+                    <a th:href="@{'/admin_users_detail/' + ${bnd.id}}">
                         <button class="btn btn-info">
                             Detail
                         </button>
@@ -181,93 +181,38 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title" th:text="#{button.add_item}"></h4>
+<!--                <h4 class="modal-title" th:text="#{button.add_item}"></h4>-->
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form th:action="@{'/addTask'}" method="post">
+                <form th:action="@{'/addUser'}" method="post">
+                    <h2 class="text-center">Registration</h2>
                     <div class="form-group">
-                        <label th:text="#{label.name}">
-                        </label>
-                        <input type="text" class="form-control" name="name">
-                    </div>
-                    <div class="form-group">
-                        <label th:text="#{label.description}">
-                        </label>
-                        <input type="text" class="form-control" name="description">
-
+                        <input name="user_email" type="email" class="form-control" placeholder="Email" required>
                     </div>
                     <div class="form-group">
-                        <label th:text="#{label.price}">
-                        </label>
-                        <input type="integer" class="form-control" name="price">
-
+                        <input name="user_password" type="password" class="form-control" placeholder="Password" required>
                     </div>
                     <div class="form-group">
-                        <label th:text="#{label.amount}">
-                        </label>
-                        <input type="integer" class="form-control" name="amount">
-
+                        <input name="user_password2" type="password" class="form-control" placeholder="Confirm Password" required>
                     </div>
                     <div class="form-group">
-                        <label th:text="#{label.rating}">
-                        </label>
-                        <input type="integer" class="form-control" name="rating" >
-
+                        <input name="full_name" type="text" class="form-control" placeholder="Full Name" required>
                     </div>
-                    <div class="form-group">
-                        <label th:text="#{label.large_picture}">
-                        </label>
-                        <input type="text" class="form-control" name="large_picture" >
-
-                    </div>
-                    <div class="form-group">
-                        <label th:text="#{label.small_picture}">
-                        </label>
-                        <input type="text" class="form-control" name="small_picture" >
-                    </div>
-
-                    <div class="form-group ">
-                        <label class="control-label requiredField" for="inTop">
-                            Is in Top?
-                            <span class="asteriskField">
-        *
-       </span>
-                        </label>
-                        <select class="select form-control" id="inTop" name="inTop">
-                            <option value="Yes">
-                                Yes
-                            </option>
-                            <option value="No">
-                                No
-                            </option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>
-                            Brand
-                        </label>
-                        <select class="form-control" name="brand_id">
-                            <option th:each="bnd : ${brands}" th:text="${bnd.name}" th:value="${bnd.id}"></option>
-                        </select>
-                    </div>
-
-
                     <div class="form-group">
                         <label >Categories</label>
                         <ul>
-                            <li th:each="cat: ${categories}">
-                                <input type="checkbox" name="cat" th:value="${cat.id}"/>
+                            <li th:each="cat: ${roles}">
+                                <input type="checkbox" name="role" th:value="${cat.id}"/>
                                 <label th:text="${cat.name}"></label>
 
                             </li>
                         </ul>
                     </div>
-
                     <div class="form-group">
-                        <button class="btn btn-success" type="submit" th:text="#{button.add_item}"></button>
+                        <button type="submit" class="btn btn-success">Register</button>
                     </div>
+
                 </form>
             </div>
         </div>

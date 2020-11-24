@@ -1,0 +1,136 @@
+<div xmlns:th = "http://www.thymeleaf.org"
+     xmlns:layout = "http://ultraq.net.nz/thymeleaf/layout" layout:decorator = "layout/main.html">
+
+    <div layout:fragment = "block-content">
+        <div class="row mt-5">
+            <div class="col-12">
+                <h1 class="text-center">Welcome <span th:text="${currentUser.fullName}"></span></h1>
+            </div>
+        </div>
+
+        <style>
+            .contain{
+                display: flex;
+
+            }
+        </style>
+
+        <div class="contain" style="height: 500px; justify-content: space-between">
+            <div class="left" style="width: 20%; margin: 0 auto">
+
+                <div class="card" style="width: 200px; margin-top: 40px;">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" style="background-color: #212529">
+                            <span style="color: white" th:text="#{label.categories}"></span>
+                        </li>
+                        <li class="list-group-item">
+                            <a href=""><button name="id" class="btn btn-outline-dark btn-sm"><i class="fa fa-shopping-cart"  th:href="@{'/'}" th:text="#{button.all_items}"></i></button>
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href=""><button class="btn btn-outline-dark btn-sm" ><i class="fa fa-mobile" th:href="@{'/'}" th:text="#{button.phones}">Phones</i></button></a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href=""><button class="btn btn-outline-dark btn-sm " ><i class="fa fa-laptop" th:href="@{'/'}" th:text="#{button.laptops}">Laptops</i></button></a>
+                        </li>
+                        <!--                    <li class="list-group-item">-->
+                        <!--                        <a href=""><button class="btn btn-outline-dark btn-sm"><i class="fa fa-stopwatch">Watches</i></button></a>-->
+                        <!--                    </li>-->
+                        <li class="list-group-item">
+                            <a href=""><button class="btn btn-outline-dark btn-sm"><i class="fa fa-tv" th:href="@{'/'}" th:text="#{button.televisions}">Televisions</i></button></a>
+                        </li>
+                        <!--                    <li class="list-group-item">-->
+                        <!--                        <a href=""><button class="btn btn-outline-dark btn-sm"><i class="fa fa-joystick">Game Consoles</i></button></a>-->
+                        <!--                    </li>-->
+                        <li class="list-group-item">
+                            <a href=""><button class="btn btn-outline-dark btn-sm" ><i class="fa fa-shopping-bag" th:href="@{'/'}" th:text="#{button.others}">Others</i></button></a>
+                        </li>
+                        <li class="list-group-item">
+                            <a th:href="@{'/topItem'}"><button class="btn btn-outline-dark btn-sm" ><i class="fa fa-arrow-alt-to-top" th:href="@{'/'}" th:text="#{button.inTop}"></i></button></a>
+                        </li>
+                    </ul>
+                </div>
+
+
+
+
+
+            </div>
+            <div class="right" style="width: 70%;">
+
+
+                <div style="margin-left: 150px; width: 400px; margin-top: 40px;">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${param.success_fullname}">
+                        <strong th:text="#{alert.success_fullname}"></strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form th:action="@{'/saveProfile'}" method="post">
+                        <input type="hidden" name="id" th:value="${currentUser.id}">
+                        <div class="form-group">
+                            <label>Email: </label>
+                            <input type="text" class="form-control" name="email" th:value="${currentUser.email}">
+                        </div>
+                        <div class="form-group">
+                            <label>Full Name: </label>
+                            <input type="text" class="form-control" name="name" th:value="${currentUser.fullName}">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-sm float-right">Update</button>
+                        </div>
+                    </form>
+
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${param.success_password}">
+                        <strong th:text="#{alert.success_password}"></strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${param.error_new_password}">
+                        <strong th:text="#{alert.error_new_password}"></strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${param.error_old_password}">
+                        <strong th:text="#{alert.error_old_password}"></strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form th:action="@{'/changePassword'}" style="margin-top: 80px;" method="post">
+                        <input type="hidden" name="id" th:value="${currentUser.id}">
+
+                        <div class="form-group">
+                            <label>Old password: </label>
+                            <input type="password" class="form-control" name="old_password">
+                        </div>
+                        <div class="form-group">
+                            <label>New password: </label>
+                            <input type="password" class="form-control" name="new_password">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm password: </label>
+                            <input type="password" class="form-control" name="new_password2">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-sm float-right">Update</button>
+                        </div>
+                    </form>
+                </div>
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</html>

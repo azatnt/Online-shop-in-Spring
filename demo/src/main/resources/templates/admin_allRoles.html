@@ -73,14 +73,13 @@
                 <th scope="col"></th>
                 <th scope="col">Name</th>
                 <th scope="col"></th>
-                <th scope="col">Brand</th>
-                <th scope="col"></th>
-                <th scope="col">Price</th>
+                <th scope="col">Description</th>
+
             </tr>
             </thead>
             <tbody>
 
-            <tr th:each="bnd: ${items}">
+            <tr th:each="bnd: ${roles}">
                 <td scope="row"></td>
                 <td scope="row"></td>
 
@@ -89,12 +88,11 @@
 
                 <td scope="row" th:text="${bnd.name}"></td>
                 <td scope="row"></td>
-                <td scope="row" th:text="${bnd.brand.name}"></td>
-                <td scope="row"></td>
-                <td scope="row" th:text="${bnd.price}"></td>
+                <td scope="row" th:text="${bnd.description}"></td>
+
 
                 <td style="display: flex;">
-                    <a th:href="@{'/admin_items_detail/' + ${bnd.id}}">
+                    <a th:href="@{'/admin_roles_detail/' + ${bnd.id}}">
                         <button class="btn btn-info">
                             Detail
                         </button>
@@ -181,93 +179,23 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title" th:text="#{button.add_item}"></h4>
+<!--                <h4 class="modal-title" th:text="#{button.add_item}"></h4>-->
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form th:action="@{'/addTask'}" method="post">
+                <form th:action="@{'/addRole'}" method="post">
+                    <h2 class="text-center">Add Role</h2>
                     <div class="form-group">
-                        <label th:text="#{label.name}">
-                        </label>
-                        <input type="text" class="form-control" name="name">
+                        <input name="name" type="text" class="form-control" placeholder="Name" required>
                     </div>
                     <div class="form-group">
-                        <label th:text="#{label.description}">
-                        </label>
-                        <input type="text" class="form-control" name="description">
-
-                    </div>
-                    <div class="form-group">
-                        <label th:text="#{label.price}">
-                        </label>
-                        <input type="integer" class="form-control" name="price">
-
-                    </div>
-                    <div class="form-group">
-                        <label th:text="#{label.amount}">
-                        </label>
-                        <input type="integer" class="form-control" name="amount">
-
-                    </div>
-                    <div class="form-group">
-                        <label th:text="#{label.rating}">
-                        </label>
-                        <input type="integer" class="form-control" name="rating" >
-
-                    </div>
-                    <div class="form-group">
-                        <label th:text="#{label.large_picture}">
-                        </label>
-                        <input type="text" class="form-control" name="large_picture" >
-
-                    </div>
-                    <div class="form-group">
-                        <label th:text="#{label.small_picture}">
-                        </label>
-                        <input type="text" class="form-control" name="small_picture" >
-                    </div>
-
-                    <div class="form-group ">
-                        <label class="control-label requiredField" for="inTop">
-                            Is in Top?
-                            <span class="asteriskField">
-        *
-       </span>
-                        </label>
-                        <select class="select form-control" id="inTop" name="inTop">
-                            <option value="Yes">
-                                Yes
-                            </option>
-                            <option value="No">
-                                No
-                            </option>
-                        </select>
+                        <input name="description" type="text" class="form-control" placeholder="Description" required>
                     </div>
 
                     <div class="form-group">
-                        <label>
-                            Brand
-                        </label>
-                        <select class="form-control" name="brand_id">
-                            <option th:each="bnd : ${brands}" th:text="${bnd.name}" th:value="${bnd.id}"></option>
-                        </select>
+                        <button type="submit" class="btn btn-success">Add</button>
                     </div>
 
-
-                    <div class="form-group">
-                        <label >Categories</label>
-                        <ul>
-                            <li th:each="cat: ${categories}">
-                                <input type="checkbox" name="cat" th:value="${cat.id}"/>
-                                <label th:text="${cat.name}"></label>
-
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="form-group">
-                        <button class="btn btn-success" type="submit" th:text="#{button.add_item}"></button>
-                    </div>
                 </form>
             </div>
         </div>

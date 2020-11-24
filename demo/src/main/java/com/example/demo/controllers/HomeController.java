@@ -2,13 +2,17 @@ package com.example.demo.controllers;
 
 import com.example.demo.db.DBManager;
 import com.example.demo.db.ShopItem;
-import com.example.demo.entities.Brands;
-import com.example.demo.entities.Categories;
-import com.example.demo.entities.Countries;
-import com.example.demo.entities.Items;
+import com.example.demo.entities.*;
 import com.example.demo.repositories.BrandRepository;
 import com.example.demo.services.ItemsService;
+import com.example.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,10 +32,15 @@ public class HomeController {
     @Autowired
     private ItemsService itemsService;
 
+    @Autowired
+    private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping(value = "/")
     public String index(Model model) {
+        model.addAttribute("currentUser", getUserData());
 
         List<Items> item = itemsService.getAllItems();
         model.addAttribute("item", item);
@@ -49,6 +58,7 @@ public class HomeController {
     @GetMapping(value = "/topItem")
     public String topItems(Model model) {
 
+        model.addAttribute("currentUser", getUserData());
 
         List<Items> item = itemsService.getOnTop();
         model.addAttribute("item", item);
@@ -137,7 +147,10 @@ public class HomeController {
 //        return "redirect:/";
 //    }
 
+
+
     @PostMapping(value = "/deleteItem")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')")
     public String deleteItem(@RequestParam(name = "id") Long id) {
         Items items = itemsService.getItem(id);
         if (items!=null){
@@ -148,6 +161,9 @@ public class HomeController {
 
     @GetMapping(value = "/detail/{id}")
     public String detail(Model model, @PathVariable(name = "id") Long id) {
+
+        model.addAttribute("currentUser", getUserData());
+
         Items item = itemsService.getItem(id);
         model.addAttribute("item", item);
 
@@ -169,6 +185,8 @@ public class HomeController {
 
     {
 
+        model.addAttribute("currentUser", getUserData());
+
         List<Items> item = itemsService.searchName(search);
         List<Brands> brands = itemsService.getAllBrands();
         model.addAttribute("brands", brands);
@@ -188,6 +206,8 @@ public class HomeController {
                          @RequestParam(name = "brand_id") Long id) {
 
         List<Items> item = null;
+
+        model.addAttribute("currentUser", getUserData());
 
 
         List<Brands> brands = itemsService.getAllBrands();
@@ -233,7 +253,9 @@ public class HomeController {
 
 
     @GetMapping(value = "/admin")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')")
     public String admin(Model model) {
+        model.addAttribute("currentUser", getUserData());
 
         List<Brands> brands = itemsService.getAllBrands();
         model.addAttribute("brands", brands);
@@ -246,6 +268,7 @@ public class HomeController {
 
 
     @PostMapping(value = "/addBrand")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String addBrand(@RequestParam(name = "name") String name,
                            @RequestParam(name = "country_id") Long id)
     {
@@ -258,7 +281,11 @@ public class HomeController {
 
 
     @GetMapping(value = "/admin_brand_detail/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String admin_detail(Model model, @PathVariable(name = "id") Long id) {
+
+        model.addAttribute("currentUser", getUserData());
+
         Brands brands = itemsService.getBrand(id);
         model.addAttribute("brands", brands);
 
@@ -270,6 +297,7 @@ public class HomeController {
 
 
     @PostMapping(value = "/saveBrand")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String saveBrand(@RequestParam(name = "id") Long id,
                            @RequestParam(name = "name") String name,
                            @RequestParam(name = "country_id") Long count_id)
@@ -288,6 +316,7 @@ public class HomeController {
     }
 
     @PostMapping(value = "/deleteBrand")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String deleteBrand(@RequestParam(name = "id") Long id) {
         Brands brands = itemsService.getBrand(id);
         if (brands!=null){
@@ -299,7 +328,10 @@ public class HomeController {
 
 
     @GetMapping(value = "/countries")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String adminCountry(Model model) {
+
+        model.addAttribute("currentUser", getUserData());
 
         List<Countries> countries = itemsService.getAllCountries();
         model.addAttribute("countries", countries);
@@ -309,6 +341,7 @@ public class HomeController {
 
 
     @PostMapping(value = "/addCountry")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String addBrand(@RequestParam(name = "name") String name,
                            @RequestParam(name = "code") String code)
     {
@@ -320,7 +353,10 @@ public class HomeController {
 
 
     @GetMapping(value = "/admin_country_detail/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String admin_country_detail(Model model, @PathVariable(name = "id") Long id) {
+        model.addAttribute("currentUser", getUserData());
+
         Countries countries = itemsService.getCountry(id);
         model.addAttribute("country", countries);
         return "country_detail";
@@ -328,6 +364,7 @@ public class HomeController {
 
 
     @PostMapping(value = "/saveCountry")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String saveCountry(@RequestParam(name = "id") Long id,
                             @RequestParam(name = "name") String name,
                             @RequestParam(name = "code") String code)
@@ -346,6 +383,7 @@ public class HomeController {
 
 
     @PostMapping(value = "/deleteCountry")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String deleteCountry(@RequestParam(name = "id") Long id) {
         Countries countries = itemsService.getCountry(id);
         if (countries!=null){
@@ -355,6 +393,7 @@ public class HomeController {
     }
 
     @PostMapping(value = "/assigncategory")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String assignCategory(@RequestParam(name = "id") Long id,
                                  @RequestParam(name = "category_id") Long cat_id)
     {
@@ -378,6 +417,7 @@ public class HomeController {
 
 
     @PostMapping(value = "/removecategory")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String removeCategory(@RequestParam(name = "id") Long id,
                                  @RequestParam(name = "category_id") Long cat_id)
     {
@@ -424,7 +464,10 @@ public class HomeController {
 
 
     @GetMapping(value = "/categories")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String adminCategory(Model model) {
+
+        model.addAttribute("currentUser", getUserData());
 
         List<Categories> categories = itemsService.getAllCategories();
         model.addAttribute("categories", categories);
@@ -434,6 +477,7 @@ public class HomeController {
 
 
     @PostMapping(value = "/addCategory")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String addCategory(@RequestParam(name = "name") String name,
                            @RequestParam(name = "logo_url") String logo_url)
     {
@@ -446,7 +490,10 @@ public class HomeController {
 
 
     @GetMapping(value = "/admin_category_detail/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String admin_category_detail(Model model, @PathVariable(name = "id") Long id) {
+        model.addAttribute("currentUser", getUserData());
+
         Categories categories = itemsService.getCategory(id);
         model.addAttribute("category", categories);
         return "category_detail";
@@ -454,6 +501,7 @@ public class HomeController {
 
 
     @PostMapping(value = "/saveCategory")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String saveCategory(@RequestParam(name = "id") Long id,
                               @RequestParam(name = "name") String name,
                               @RequestParam(name = "logo_url") String logo_url)
@@ -472,6 +520,7 @@ public class HomeController {
 
 
     @PostMapping(value = "/deleteCategory")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String deleteCategory(@RequestParam(name = "id") Long id) {
         Categories categories = itemsService.getCategory(id);
         if (categories!=null){
@@ -483,8 +532,10 @@ public class HomeController {
 
 
     @GetMapping(value = "/allItems")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')")
     public String adminItems(Model model) {
 
+        model.addAttribute("currentUser", getUserData());
 
         List<Categories> categories = itemsService.getAllCategories();
         model.addAttribute("categories", categories);
@@ -500,7 +551,10 @@ public class HomeController {
 
 
     @GetMapping(value = "/admin_items_detail/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')")
     public String admin_items_detail(Model model, @PathVariable(name = "id") Long id) {
+        model.addAttribute("currentUser", getUserData());
+
         Items items = itemsService.getItem(id);
         model.addAttribute("items", items);
 
@@ -542,6 +596,7 @@ public class HomeController {
 
 
     @PostMapping(value = "/saveItem")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')")
     public String saveItem(@RequestParam(name = "id") Long id,
                            @RequestParam(name = "name") String name,
                            @RequestParam(name = "description") String description,
@@ -582,5 +637,321 @@ public class HomeController {
 
 
 
+    @GetMapping(value = "/403")
+    public String accessDenied(Model model){
+        model.addAttribute("currentUser", getUserData());
+        return "forbidden";
+    }
 
+
+    @GetMapping(value = "/login")
+    public String login(Model model){
+        model.addAttribute("currentUser", getUserData());
+        return "login";
+    }
+
+
+    @GetMapping(value = "/profile")
+    @PreAuthorize("isAuthenticated()")
+    public String profile(Model model){
+        model.addAttribute("currentUser", getUserData());
+        return "profile";
+    }
+
+    private Users getUserData(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!(authentication instanceof AnonymousAuthenticationToken)){
+            User secUser = (User)authentication.getPrincipal();
+            Users myUser = userService.getUserByEmail(secUser.getUsername());
+            return myUser;
+        }
+        return null;
+    }
+
+
+    @GetMapping(value = "/registration")
+    public String registration(Model model){
+        model.addAttribute("currentUser", getUserData());
+        return "registration";
+    }
+
+
+    @PostMapping(value = "/registration")
+    public String registration(@RequestParam(name = "user_email") String user_email,
+                               @RequestParam(name = "user_password") String user_password,
+                               @RequestParam(name = "user_password2") String user_password2,
+                               @RequestParam(name = "full_name") String full_name){
+        if(user_password.equals(user_password2)){
+            Users users = new Users();
+            users.setEmail(user_email);
+            users.setPassword(passwordEncoder.encode(user_password));
+            users.setFullName(full_name);
+
+            Roles roles = userService.getRolesByName("ROLE_USER");
+            ArrayList<Roles> roles1 = new ArrayList<>();
+            roles1.add(roles);
+            users.setRoles(roles1);
+
+            userService.addUser(users);
+            return "redirect:/login";
+        }else{
+            return "redirect:/registration";
+        }
+    }
+
+
+    @GetMapping(value = "/allUsers")
+    public String allUsers(Model model){
+
+        List<Users> users = userService.getAllUsers();
+        model.addAttribute("currentUser", getUserData());
+        model.addAttribute("users", users);
+
+        List<Roles> roles = userService.getAllRoles();
+        model.addAttribute("roles", roles);
+        return "admin_allUsers";
+    }
+
+    @PostMapping(value = "/addUser")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String addUser(@RequestParam(name = "user_email") String email,
+                          @RequestParam(name = "user_password") String password,
+                          @RequestParam(name = "user_password2") String user_password2,
+                          @RequestParam(name = "full_name") String full_name,
+                          @RequestParam(name = "role") List<Long> roleId)
+    {
+        if(password.equals(user_password2)){
+
+            ArrayList<Roles> roles = new ArrayList<>();
+            for(Long role: roleId){
+                roles.add(userService.getRole(role));
+            }
+
+            Users users = new Users();
+            users.setEmail(email);
+            users.setPassword(passwordEncoder.encode(password));
+            users.setFullName(full_name);
+            users.setRoles(roles);
+
+
+            userService.addUser(users);
+            return "redirect:/allUsers";
+        }else{
+            return "redirect:/allUsers";
+        }
+    }
+
+
+
+    @GetMapping(value = "/admin_users_detail/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String admin_users_detail(Model model, @PathVariable(name = "id") Long id) {
+        model.addAttribute("currentUser", getUserData());
+
+        Users users = userService.getUser(id);
+        model.addAttribute("users", users);
+
+
+        List<Roles> roles = userService.getAllRoles();
+        model.addAttribute("roles", roles);
+
+        roles.removeIf(x -> users.getRoles().contains(x));
+
+
+        return "user_detail";
+    }
+
+
+    @PostMapping(value = "/assignrole")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String assignRole(@RequestParam(name = "id") Long id,
+                             @RequestParam(name = "role_id") Long role_id)
+    {
+        Roles roles = userService.getRole(role_id);
+        if(roles!=null){
+            Users users = userService.getUser(id);
+            if(users!=null){
+                List<Roles> roles1 = users.getRoles();
+                if(roles1==null ){
+                    roles1 = new ArrayList<>();
+                }
+                roles1.add(roles);
+
+                userService.saveUser(users);
+                return "redirect:/admin_users_detail/"+id;
+
+            }
+        }
+        return "redirect:/allUsers";
+    }
+
+
+
+
+    @PostMapping(value = "/removerole")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String removeRole(@RequestParam(name = "id") Long id,
+                             @RequestParam(name = "role_id") Long role_id)
+    {
+        Roles roles = userService.getRole(role_id);
+        if(roles!=null){
+            Users users = userService.getUser(id);
+            if(users!=null){
+                List<Roles> roles1 = users.getRoles();
+                if(roles1==null ){
+                    roles1 = new ArrayList<>();
+                }
+                roles1.remove(roles);
+
+                userService.saveUser(users);
+                return "redirect:/admin_users_detail/"+id;
+
+            }
+        }
+        return "redirect:/allUsers";
+    }
+
+
+
+    @PostMapping(value = "/saveUser")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String saveUser(@RequestParam(name = "id") Long id,
+                           @RequestParam(name = "email") String email,
+                           @RequestParam(name = "full_name") String full_name)
+    {
+
+
+        Users users = userService.getUser(id);
+        if (users!=null){
+                users.setEmail(email);
+                users.setFullName(full_name);
+
+                userService.saveUser(users);
+
+        }
+        return "redirect:/allUsers";
+    }
+
+
+    @PostMapping(value = "/deleteUser")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String deleteUser(@RequestParam(name = "id") Long id) {
+        Users users = userService.getUser(id);
+        if (users!=null){
+            userService.deleteUser(users);
+        }
+        return "redirect:/allUsers";
+    }
+
+
+
+    @GetMapping(value = "/allRoles")
+    public String allRoles(Model model){
+
+        List<Roles> roles = userService.getAllRoles();
+        model.addAttribute("currentUser", getUserData());
+        model.addAttribute("roles", roles);
+
+        return "admin_allRoles";
+    }
+
+
+
+    @PostMapping(value = "/addRole")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String addRole(@RequestParam(name = "name") String name,
+                          @RequestParam(name = "description") String description)
+    {
+
+        userService.addRole(new Roles(null, name, description));
+
+        return "redirect:/allRoles";
+    }
+
+
+
+    @GetMapping(value = "/admin_roles_detail/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String admin_role_detail(Model model, @PathVariable(name = "id") Long id) {
+        model.addAttribute("currentUser", getUserData());
+
+        Roles roles = userService.getRole(id);
+        model.addAttribute("roles", roles);
+        return "role_detail";
+    }
+
+
+    @PostMapping(value = "/saveRole")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String saveRole(@RequestParam(name = "id") Long id,
+                               @RequestParam(name = "name") String name,
+                               @RequestParam(name = "description") String description)
+    {
+
+
+
+        Roles roles = userService.getRole(id);
+        if (roles!=null){
+            roles.setName(name);
+            roles.setDescription(description);
+            userService.saveRole(roles);
+        }
+        return "redirect:/allRoles";
+    }
+
+
+    @PostMapping(value = "/deleteRole")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String deleteRole(@RequestParam(name = "id") Long id) {
+        Roles roles = userService.getRole(id);
+        if (roles!=null){
+            userService.deleteRole(roles);
+        }
+        return "redirect:/allRoles";
+    }
+
+    @PostMapping(value = "/saveProfile")
+
+    public String saveProfile(@RequestParam(name = "id") Long id,
+                           @RequestParam(name = "email") String email,
+                           @RequestParam(name = "name") String name)
+    {
+
+
+
+        Users users = userService.getUser(id);
+        if (users!=null){
+            users.setEmail(email);
+            users.setFullName(name);
+            userService.saveUser(users);
+        }
+        return "redirect:/profile?succes_fullname";
+    }
+
+
+    @PostMapping(value = "/changePassword")
+    @PreAuthorize("isAuthenticated()")
+    public String changePassword(@RequestParam(name = "id") Long id,
+                                 @RequestParam(name = "old_password") String old_password,
+                                 @RequestParam(name = "new_password") String new_password,
+                                 @RequestParam(name = "new_password2") String new_password2)
+    {
+
+
+
+        Users users = userService.getUser(id);
+        if (users!=null){
+            if(passwordEncoder.matches(old_password, users.getPassword())){
+                if(new_password.equals(new_password2)){
+                    users.setPassword(passwordEncoder.encode(new_password));
+                    userService.saveUser(users);
+
+                    return "redirect:/profile?succes_password";
+                }
+                return "redirect:/profile?error_new_password";
+            }
+            return "redirect:/profile?error_old_password";
+        }
+        return "redirect:/profile?error";
+    }
 }
