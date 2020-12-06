@@ -5,6 +5,22 @@
         <div class="row mt-5">
             <div class="col-12">
                 <h1 class="text-center">Welcome <span th:text="${currentUser.fullName}"></span></h1>
+                <div class="row">
+                    <div class="col-4 offset-3" style="margin-left: 500px;">
+                        <img th:src="@{'/viewphoto/'+${currentUser.userAvatar}}" alt="" class="my-3" style="width: 100%; height: 400px;">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 offset-3">
+                        <form th:action="@{'/uploadavatar'}" method="post" enctype="multipart/form-data">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFile" name="user_ava">
+                                <label class="custom-file-label" for="customFile" th:text="#{button.chooseFile }">Choose picture</label>
+                                <button class="btn btn-success mt-2" th:text="#{button.updloadFile}"></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -82,19 +98,19 @@
                     </form>
 
                     <div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${param.success_password}">
-                        <strong th:text="#{alert.success_password}"></strong>
+                        <strong th:text="#{password successfully changed}"></strong>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${param.error_new_password}">
-                        <strong th:text="#{alert.error_new_password}"></strong>
+                        <strong th:text="#{error new passwords did not match}"></strong>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${param.error_old_password}">
-                        <strong th:text="#{alert.error_old_password}"></strong>
+                        <strong th:text="#{error old password incorrect}"></strong>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
