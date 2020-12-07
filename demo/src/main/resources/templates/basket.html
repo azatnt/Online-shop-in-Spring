@@ -1,0 +1,179 @@
+<div xmlns:th = "http://www.thymeleaf.org"
+     xmlns:layout = "http://ultraq.net.nz/thymeleaf/layout" layout:decorator = "layout/main.html">
+
+    <div layout:fragment = "block-content">
+
+        <style>
+            .contain{
+                display: flex;
+
+            }
+        </style>
+
+
+
+
+
+        <div class="contain" style="height: 500px; justify-content: space-between">
+            <div class="left" style="width: 20%; margin: 0 auto">
+
+                <div class="card" style="width: 200px; margin-top: 40px;">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" style="background-color: #212529">
+                            <span style="color: white" th:text="#{label.categories}"></span>
+                        </li>
+                        <li class="list-group-item">
+                            <a href=""><button name="id" class="btn btn-outline-dark btn-sm"><i class="fa fa-shopping-cart"  th:href="@{'/'}" th:text="#{button.all_items}"></i></button>
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href=""><button class="btn btn-outline-dark btn-sm" ><i class="fa fa-mobile" th:href="@{'/'}" th:text="#{button.phones}">Phones</i></button></a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href=""><button class="btn btn-outline-dark btn-sm " ><i class="fa fa-laptop" th:href="@{'/'}" th:text="#{button.laptops}">Laptops</i></button></a>
+                        </li>
+                        <!--                    <li class="list-group-item">-->
+                        <!--                        <a href=""><button class="btn btn-outline-dark btn-sm"><i class="fa fa-stopwatch">Watches</i></button></a>-->
+                        <!--                    </li>-->
+                        <li class="list-group-item">
+                            <a href=""><button class="btn btn-outline-dark btn-sm"><i class="fa fa-tv" th:href="@{'/'}" th:text="#{button.televisions}">Televisions</i></button></a>
+                        </li>
+                        <!--                    <li class="list-group-item">-->
+                        <!--                        <a href=""><button class="btn btn-outline-dark btn-sm"><i class="fa fa-joystick">Game Consoles</i></button></a>-->
+                        <!--                    </li>-->
+                        <li class="list-group-item">
+                            <a href=""><button class="btn btn-outline-dark btn-sm" ><i class="fa fa-shopping-bag" th:href="@{'/'}" th:text="#{button.others}">Others</i></button></a>
+                        </li>
+                        <li class="list-group-item">
+                            <a th:href="@{'/topItem'}"><button class="btn btn-outline-dark btn-sm" ><i class="fa fa-arrow-alt-to-top" th:href="@{'/'}" th:text="#{button.inTop}"></i></button></a>
+                        </li>
+                    </ul>
+                </div>
+
+
+
+
+                <div class="card" style="width: 200px; margin-top: 40px;">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"  style="background-color: #212529">
+                            <span style="color: white" th:text="#{label.brands}"></span>
+                        </li>
+                        <li class="list-group-item">
+                            <a href=""><button name="id" class="btn btn-outline-dark btn-sm"><i class="fa fa-shopping-cart"  th:href="@{'/'}" th:text="#{button.all_items}"></i></button>
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href=""><button class="btn btn-outline-dark btn-sm" ><i class="fa fa-mobile" th:href="@{'/'}" th:text="#{button.phones}">Phones</i></button></a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href=""><button class="btn btn-outline-dark btn-sm " ><i class="fa fa-laptop" th:href="@{'/'}" th:text="#{button.laptops}">Laptops</i></button></a>
+                        </li>
+                        <!--                    <li class="list-group-item">-->
+                        <!--                        <a href=""><button class="btn btn-outline-dark btn-sm"><i class="fa fa-stopwatch">Watches</i></button></a>-->
+                        <!--                    </li>-->
+                        <li class="list-group-item">
+                            <a href=""><button class="btn btn-outline-dark btn-sm"><i class="fa fa-tv" th:href="@{'/'}" th:text="#{button.televisions}">Televisions</i></button></a>
+                        </li>
+                        <!--                    <li class="list-group-item">-->
+                        <!--                        <a href=""><button class="btn btn-outline-dark btn-sm"><i class="fa fa-joystick">Game Consoles</i></button></a>-->
+                        <!--                    </li>-->
+                        <li class="list-group-item">
+                            <a href=""><button class="btn btn-outline-dark btn-sm" ><i class="fa fa-shopping-bag" th:href="@{'/'}" th:text="#{button.others}">Others</i></button></a>
+                        </li>
+                    </ul>
+                </div>
+
+
+            </div>
+            <div class="right" style="width: 70%;">
+                <form th:action="@{'/search'}" method="get" class="form-inline mr-auto" style="margin-top: 45px;">
+                    <input class="form-control mr-sm-2" type="text" name="search" style="width: 70%;" th:placeholder="#{label.search}" aria-label="Search">
+
+                    <button class="btn blue-gradient btn-rounded " style="color: white; background-color: #212529;"type="submit" th:text="#{button.search}"></button>
+                </form>
+
+
+            <div th:if="${basket.size() == 0}">
+                <div class="alert alert-primary" role="alert">
+                    <span th:text="#{label.basketSize}"></span>
+                    <a href="/" th:text="#{label.allItems}"></a>
+                </div>
+            </div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <td scope="col" th:text="#{label.name}"></td>
+                        <td scope="col" th:text="#{label.price}"></td>
+                        <td scope="col" th:text="#{label.amount}"></td>
+                        <td scope="col" th:text="#{label.action}"></td>
+                        <td scope="col" th:text="#{label.action}"></td>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="it: ${basket}">
+                        <th scope="row">
+                            <span th:text="${it.getItems().name}"></span>
+                        </th>
+                        <th>
+                            <span th:text="${it.getItems().price}"></span>
+                        </th>
+                        <th>
+                            <span th:text="${it.getQuantity()}"></span>
+                        </th>
+                        <th>
+                            <form th:action="@{'/addQuantity'}" method="post">
+                                <input type="hidden" name="id" th:value="${it.getItems().getId()}">
+                                <button type="submit" class="btn btn-success btn-sm"> + </button>
+
+                            </form>
+                        </th>
+                        <th>
+                            <form th:action="@{'/removeQuantity'}" method="post">
+                                <input type="hidden" name="id" th:value="${it.getItems().getId()}">
+                                <button type="submit" class="btn btn-danger btn-sm"> - </button>
+
+                            </form>
+                        </th>
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+
+
+
+                <div class="row">
+                    <div class="col-7">
+                        <div th:if="${basket.size() != 0}" style="margin-left: 10px;">
+                            <span th:text="'Total: ' + ${total}"></span>
+                            <span> $</span>
+                        </div>
+                    </div>
+                    <div style="margin-left: 50px;" th:if="${basket.size() != 0}">
+                        <form th:action="@{'/checkIn'}" method="post">
+                            <button type="submit" class="btn btn-primary btn-sm">Check in</button>
+                        </form>
+                    </div>
+                    <div style="margin-left: 7px;" th:if="${basket.size() != 0}">
+                        <form th:action="@{'/clearBasket'}" method="post">
+                            <button type="submit" class="btn btn-danger btn-sm">Clear basket</button>
+                        </form>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+</html>

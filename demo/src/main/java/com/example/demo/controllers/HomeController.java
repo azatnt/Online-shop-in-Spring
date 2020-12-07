@@ -23,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -1012,6 +1013,7 @@ public class HomeController {
     public @ResponseBody byte[] viewProfilePhoto(@PathVariable(name = "url") String url) throws IOException {
         String pictureUrl = viewPath + defaultPicture;
 
+
         if(url!=null && !url.equals("null")){
             pictureUrl = viewPath + url + ".jpg";
         }
@@ -1039,6 +1041,8 @@ public class HomeController {
         List<Pictures> pictures = itemsService.getAllPictures();
         model.addAttribute("currentUser", getUserData());
         model.addAttribute("pictures", pictures);
+        model.addAttribute("currentUser", getUserData());
+
 
         return "admin_allPictures";
     }
@@ -1095,6 +1099,7 @@ public class HomeController {
             pictureUrl = viewPath + url + ".jpg";
         }
 
+
         InputStream in;
 
         try {
@@ -1129,5 +1134,131 @@ public class HomeController {
         return "redirect:/admin_items_detail/"+item_id;
 
     }
+
+
+    @GetMapping(value = "/basket")
+    public String basket(Model model, HttpSession session){
+        List<Basket> baskets = (List<Basket>) session.getAttribute("basketItems");
+        model.addAttribute("currentUser", getUserData());
+        int total = 0;
+        if(baskets == null){
+            baskets = new ArrayList<>();
+        }
+        for(Basket b:baskets){
+            total += (b.getQuantity() * b.getItems().getPrice());
+
+        }
+
+        model.addAttribute("basket", baskets);
+        model.addAttribute("total", total);
+
+
+        return "basket";
+    }
+
+
+    @PostMapping(value = "/addBasket")
+    public String addBasket(HttpSession session,
+                            @RequestParam(name = "id") Long id){
+        List<Basket> items = (List<Basket>) session.getAttribute("basketItems");
+        if(items == null){
+            items = new ArrayList<>();
+
+        }
+
+        Basket basket = new Basket();
+        Items items1 = itemsService.getItem(id);
+        basket.setItems(items1);
+        System.out.println(basket);
+
+        if(items.size() > 0){
+            for (Basket b: items){
+                if(b.compareTo(basket) > 0){
+                    int existQuantity = b.getQuantity();
+                    b.setQuantity(existQuantity);
+                    session.setAttribute("basketItems", items);
+                    System.out.println(items);
+                    return "redirect:/basket";
+                }
+            }
+        }
+
+        int quantity = basket.getQuantity();
+        basket.setQuantity(quantity + 1);
+        items.add(basket);
+        session.setAttribute("basketItems", items);
+
+        System.out.println(items);
+
+        return "redirect:/basket";
+    }
+
+
+    @PostMapping(value = "/addQuantity")
+    public String addQuantity(HttpSession session,
+                            @RequestParam(name = "id") Long id){
+        List<Basket> items = (List<Basket>) session.getAttribute("basketItems");
+
+        Items item = itemsService.getItem(id);
+        Basket basket = new Basket();
+        basket.setItems(item);
+
+        for(Basket b: items){
+            if(b.compareTo(basket)>0){
+                int myQuantity = b.getQuantity();
+                b.setQuantity(myQuantity + 1);
+                session.setAttribute("basketItems", items);
+                return "redirect:/basket";
+            }
+        }
+
+
+        return "redirect:/basket";
+    }
+
+
+
+
+
+    @PostMapping(value = "/removeQuantity")
+    public String removeQuantity(HttpSession session,
+                              @RequestParam(name = "id") Long id){
+        List<Basket> items = (List<Basket>) session.getAttribute("basketItems");
+
+        Items item = itemsService.getItem(id);
+        Basket basket = new Basket();
+        basket.setItems(item);
+
+        for(Basket b: items){
+            if(b.compareTo(basket)>0){
+                if (b.getQuantity() <= 1){
+                    items.remove(b);
+                    session.setAttribute("basketItems", items);
+                    return "redirect:/basket";
+
+                }
+
+                int myQuantity = b.getQuantity();
+                b.setQuantity(myQuantity - 1);
+                session.setAttribute("basketItems", items);
+                return "redirect:/basket";
+
+            }
+        }
+
+
+        return "redirect:/basket";
+    }
+
+
+
+    @PostMapping(value = "/clearBasket")
+    public String clearBasket(HttpSession session){
+        session.removeAttribute("basketItems");
+
+        return "redirect:/basket";
+    }
+
+
 
 }

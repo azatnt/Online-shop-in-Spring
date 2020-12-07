@@ -138,6 +138,10 @@
                             </div>
                             <div class="card-footer" style="display: flex">
                                 <p>rating: </p><p class="text-muted"  th:text="${it.stars}"></p>
+                                <form th:action="@{'/addBasket'}" method="post" style="margin-left: 40px;">
+                                    <input type="hidden" name="id" th:value="${it.id}">
+                                    <button class="btn btn-success btn-sm float-right mr-2" th:text="#{button.add_item}"></button>
+                                </form>
                             </div>
                         </div>
                     </div>
