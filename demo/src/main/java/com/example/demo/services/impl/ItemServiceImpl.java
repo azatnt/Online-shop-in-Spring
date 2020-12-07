@@ -1,13 +1,7 @@
 package com.example.demo.services.impl;
 
-import com.example.demo.entities.Brands;
-import com.example.demo.entities.Categories;
-import com.example.demo.entities.Countries;
-import com.example.demo.entities.Items;
-import com.example.demo.repositories.BrandRepository;
-import com.example.demo.repositories.CategoryRepository;
-import com.example.demo.repositories.CountryRepository;
-import com.example.demo.repositories.ItemsRepository;
+import com.example.demo.entities.*;
+import com.example.demo.repositories.*;
 import com.example.demo.services.ItemsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +22,9 @@ public class ItemServiceImpl implements ItemsService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private PictureRepository pictureRepository;
 
     @Override
     public Items addItem(Items item) {
@@ -183,7 +180,36 @@ public class ItemServiceImpl implements ItemsService {
     @Override
     public void deleteCategory(Categories category) {
         categoryRepository.delete(category);
+    }
 
+    @Override
+    public List<Pictures> getAllPictures() {
+        return pictureRepository.findAll();
+    }
+
+    @Override
+    public Pictures addPicture(Pictures pictures) {
+        return pictureRepository.save(pictures);
+    }
+
+    @Override
+    public Pictures savePicture(Pictures pictures) {
+        return pictureRepository.save(pictures);
+    }
+
+    @Override
+    public Pictures getPicture(Long id) {
+        return pictureRepository.getOne(id);
+    }
+
+    @Override
+    public void deletePicture(Pictures pictures) {
+        pictureRepository.delete(pictures);
+    }
+
+    @Override
+    public List<Pictures> findAllByItemId(Long id) {
+        return pictureRepository.findAllByItemId(id);
     }
 
 

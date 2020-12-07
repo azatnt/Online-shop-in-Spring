@@ -34,6 +34,9 @@
             <li class="nav-item" sec:authorize="isAuthenticated()">
                 <a class="nav-link" th:href="@{'/categories'}" sec:authorize="hasRole('ROLE_ADMIN')">Categories</a>
             </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" th:href="@{'/pictures'}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')">Pictures</a>
+            </li>
 
         </div>
     </div>

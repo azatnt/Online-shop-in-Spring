@@ -23,6 +23,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -187,6 +189,8 @@ public class HomeController {
         List<Brands> brands = itemsService.getAllBrands();
         model.addAttribute("brands", brands);
 
+        List<Pictures> pictures = itemsService.findAllByItemId(id);
+        model.addAttribute("pictures", pictures);
 
         List<Categories> categories = itemsService.getAllCategories();
         model.addAttribute("categories", categories);
@@ -578,6 +582,9 @@ public class HomeController {
         List<Brands> brands = itemsService.getAllBrands();
         model.addAttribute("brands", brands);
 
+
+        List<Pictures> pictures = itemsService.findAllByItemId(id);
+        model.addAttribute("pictures", pictures);
 
         List<Categories> categories = itemsService.getAllCategories();
         model.addAttribute("categories", categories);
@@ -1023,4 +1030,104 @@ public class HomeController {
 
         return IOUtils.toByteArray(in);
     }
+
+
+
+    @GetMapping(value = "/pictures")
+    public String allPictures(Model model){
+
+        List<Pictures> pictures = itemsService.getAllPictures();
+        model.addAttribute("currentUser", getUserData());
+        model.addAttribute("pictures", pictures);
+
+        return "admin_allPictures";
+    }
+
+
+
+
+    @PostMapping(value = "/addPicture")
+    @PreAuthorize("isAuthenticated()")
+    public String uploadPicture(@RequestParam(name = "picture") MultipartFile file,
+                                @RequestParam(name = "id") Long id){
+        if(file.getContentType().equals("image/jpeg") || file.getContentType().equals("image/png") || file.getContentType().equals("image/jpg")) {
+            try {
+
+                Items items = itemsService.getItem(id);
+
+                long millis=System.currentTimeMillis();
+                java.sql.Date date_added=new java.sql.Date(millis);
+
+
+
+                String picName = DigestUtils.sha1Hex("avatar_" + LocalDateTime.now().getMinute() + file);
+
+
+
+                byte[] bytes = file.getBytes();
+                Path path = Paths.get(uploadPath + picName+".jpg");
+                Files.write(path, bytes);
+
+
+//                items.setSmall_picture_url(picName);
+//                itemsService.saveItem(items);
+
+                itemsService.addPicture(new Pictures(null, picName, date_added, items));
+
+                return "redirect:/admin_items_detail/"+id;
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return "redirect:/allItems";
+
+    }
+
+
+    @GetMapping(value = "/viewimage/{url}", produces = {MediaType.IMAGE_JPEG_VALUE})
+//    @PreAuthorize("isAuthenticated()")
+    public @ResponseBody byte[] viewItemPhoto(@PathVariable(name = "url") String url) throws IOException {
+        String pictureUrl = viewPath + defaultPicture;
+
+        if(url!=null && !url.equals("null")){
+            pictureUrl = viewPath + url + ".jpg";
+        }
+
+        InputStream in;
+
+        try {
+            ClassPathResource resource = new ClassPathResource(pictureUrl);
+            in = resource.getInputStream();
+        }catch (Exception e){
+
+            ClassPathResource resource = new ClassPathResource(viewPath+defaultPicture);
+            in = resource.getInputStream();
+            e.printStackTrace();
+        }
+
+        return IOUtils.toByteArray(in);
+    }
+
+
+    @PostMapping(value = "/delete/imageitem")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
+    public String deleteImageItem(@RequestParam(name = "image_id") Long image_id,
+                                         @RequestParam(name = "item_id") Long item_id) throws IOException {
+        Pictures picture = itemsService.getPicture(image_id);
+        String url = uploadPath + picture.getUrl()+".jpg";
+
+        File file = new File(url);
+        new FileInputStream(file);
+        System.gc();
+        Files.delete(Paths.get(file.getPath()));
+
+
+        itemsService.deletePicture(picture);
+
+        return "redirect:/admin_items_detail/"+item_id;
+
+    }
+
 }
