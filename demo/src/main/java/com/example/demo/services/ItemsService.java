@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.*;
+import org.aspectj.weaver.ast.Or;
 
 import java.util.List;
 
@@ -48,5 +49,11 @@ public interface ItemsService {
     Pictures getPicture(Long id);
     void deletePicture(Pictures pictures);
     List<Pictures> findAllByItemId(Long id);
+
+
+    Order addOrder(Order order);
+    List<Order> getAllOrders();
+    Order getOrder(Long id);
+    void deleteOrder(Order order);
 
 }

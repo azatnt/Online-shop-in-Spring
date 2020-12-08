@@ -26,6 +26,8 @@ public class ItemServiceImpl implements ItemsService {
     @Autowired
     private PictureRepository pictureRepository;
 
+    @Autowired OrderRepository orderRepository;
+
     @Override
     public Items addItem(Items item) {
         return itemsRepository.save(item);
@@ -210,6 +212,26 @@ public class ItemServiceImpl implements ItemsService {
     @Override
     public List<Pictures> findAllByItemId(Long id) {
         return pictureRepository.findAllByItemId(id);
+    }
+
+    @Override
+    public Order addOrder(Order order) {
+        return orderRepository.save(order);
+    }
+
+    @Override
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    @Override
+    public Order getOrder(Long id) {
+        return orderRepository.getOne(id);
+    }
+
+    @Override
+    public void deleteOrder(Order order) {
+        orderRepository.delete(order);
     }
 
 

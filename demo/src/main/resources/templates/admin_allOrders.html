@@ -35,16 +35,26 @@
                 <a class="nav-link" th:href="@{'/categories'}" sec:authorize="hasRole('ROLE_ADMIN')">Categories</a>
             </li>
             <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" th:href="@{'/pictures'}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')">Pictures</a>
+                <a class="nav-link" th:href="@{'/allUsers'}" sec:authorize="hasRole('ROLE_ADMIN')">Users</a>
             </li>
             <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" th:href="@{'/orders'}" sec:authorize="hasRole('ROLE_ADMIN')">Orders</a>
+                <a class="nav-link" th:href="@{'/allRoles'}" sec:authorize="hasRole('ROLE_ADMIN')">Roles</a>
             </li>
-
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" th:href="@{'/pictures'}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')">Pictures</a>
+            </li>
         </div>
     </div>
 </nav>
 
+<style>
+    ul{
+        list-style-type: none;
+    }
+    .category{
+        display: block;
+    }
+</style>
 
 <div class="card">
     <div class="card-header" style="display: flex; justify-content: space-between">
@@ -52,7 +62,7 @@
 
         </div>
         <div>
-            <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal">ADD NEW</button>
+            <!--            <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal">ADD NEW</button>-->
         </div>
 
     </div>
@@ -62,42 +72,41 @@
             <tr>
                 <th scope="col"></th>
                 <th scope="col"></th>
-
                 <th scope="col">Id</th>
-
                 <th scope="col"></th>
-
-
-                <th scope="col">Name</th>
+                <th scope="col">Full Name</th>
                 <th scope="col"></th>
-                <th scope="col">Country</th>
+                <th scope="col">Order Date</th>
+                <th scope="col"></th>
+                <th scope="col">Item</th>
+                <th scope="col"></th>
+                <th scope="col">Quantity</th>
+
             </tr>
             </thead>
             <tbody>
 
-            <tr th:each="bnd: ${brands}">
+            <tr th:each="bnd: ${orders}">
                 <td scope="row"></td>
                 <td scope="row"></td>
 
                 <td scope="row" th:text="${bnd.id}"></td>
                 <td scope="row"></td>
 
-                <td scope="row" th:text="${bnd.name}"></td>
+                <td scope="row" th:text="${bnd.fullName}"></td>
                 <td scope="row"></td>
-                <td scope="row" th:text="${bnd.country.name}"></td>
+                <td scope="row" th:text="${bnd.dateAdded}"></td>
+                <td scope="row"></td>
+                <td scope="row" th:text="${bnd.items.getName()}"></td>
+                <td scope="row"></td>
+                <td scope="row" th:text="${bnd.quantity}"></td>
+
 
                 <td style="display: flex;">
-                    <a th:href="@{'/admin_brand_detail/' + ${bnd.id}}">
-                        <button class="btn btn-info">
-                            Detail
-                        </button>
-                    </a>
-<!--                    <div>-->
-<!--                        <button class="btn btn-primary" data-toggle="modal" data-target="#editModal">EDIT</button>-->
-<!--                    </div>-->
-<!--                    <div style="margin-left: 8px;">-->
-<!--                        <button class="btn btn-danger" data-toggle="modal" data-target="#delete<%=n.getId()%>">DELETE</button>-->
-<!--                    </div>-->
+                    <form th:action="@{'/deleteOrder'}" method="post">
+                        <input type="hidden" name="id" th:value="${orders!=null?bnd.id:''}">
+                        <button type="submit" class="btn btn-danger btn-sm float-right mr-2">Delete</button>
+                    </form>
                 </td>
             </tr>
             </tbody>
@@ -167,7 +176,6 @@
 </div>
 
 
-
 <!-- The Modal -->
 <div class="modal fade" id="exampleModal">
     <div class="modal-dialog">
@@ -175,28 +183,15 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title">Add News</h4>
+                <!--                <h4 class="modal-title" th:text="#{button.add_item}"></h4>-->
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form th:action="@{'/addBrand'}" method="post">
-                    <div class="form-group ">
-                        <label class="control-label " for="title"> Name </label>
-                        <input class="form-control" id="title"  name="name" type="text"/>
-                    </div>
-
-                    <div class="form-group">
-                        <label>
-                            Country
-                        </label>
-                        <select class="form-control" name="country_id" id="">
-                            <option th:each="bnd : ${countries}" th:text="${bnd.name}" th:value="${bnd.id}"></option>
-                        </select>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="submit" name="add" value="add" class="btn btn-success">ADD</button>
-                        <button type="submit" name="close" value="close" class="btn btn-secondary">CLOSE</button>
+                <form th:action="@{'/addPicture'}" method="post" enctype="multipart/form-data">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFile" name="picture">
+                        <label class="custom-file-label" for="customFile" th:text="#{button.chooseFile }">Choose picture</label>
+                        <button class="btn btn-success mt-2" th:text="#{button.updloadFile}"></button>
                     </div>
                 </form>
             </div>

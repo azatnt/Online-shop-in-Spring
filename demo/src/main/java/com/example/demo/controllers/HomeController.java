@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -1259,6 +1260,51 @@ public class HomeController {
         return "redirect:/basket";
     }
 
+
+    @PostMapping(value = "/checkIn")
+    public String checkIn(HttpSession session,
+                          @RequestParam(name = "full_name") String full_name){
+        List<Basket> baskets = (List<Basket>) session.getAttribute("basketItems");
+        long millis=System.currentTimeMillis();
+        java.sql.Date date_added = new java.sql.Date(millis);
+
+        for(Basket b:baskets){
+            Order order = new Order();
+            order.setDateAdded(date_added);
+            order.setFullName(full_name);
+            order.setItems(b.getItems());
+            order.setQuantity(b.getQuantity());
+            itemsService.addOrder(order);
+
+            session.removeAttribute("basketItems");
+            return "redirect:/basket";
+        }
+        return "redirect:/basket";
+    }
+
+
+    @GetMapping(value = "/orders")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String allOrders(Model model){
+
+        List<Order> orders = itemsService.getAllOrders();
+        model.addAttribute("orders", orders);
+        model.addAttribute("currentUser", getUserData());
+
+
+        return "admin_allOrders";
+    }
+
+
+    @PostMapping(value = "/deleteOrder")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String deleteOrder(@RequestParam(name = "id") Long id) {
+        Order order = itemsService.getOrder(id);
+        if (order!=null){
+            itemsService.deleteOrder(order);
+        }
+        return "redirect:/orders";
+    }
 
 
 }

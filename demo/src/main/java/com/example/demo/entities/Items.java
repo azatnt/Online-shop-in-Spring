@@ -53,4 +53,6 @@ public class Items {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Categories> categories;
 
+
+
 }
