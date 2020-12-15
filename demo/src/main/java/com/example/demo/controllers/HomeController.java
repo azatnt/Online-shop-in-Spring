@@ -60,7 +60,7 @@ public class HomeController {
     private String defaultPicture;
 
     @GetMapping(value = "/")
-    public String index(Model model) {
+    public String index(Model model, HttpSession session) {
         model.addAttribute("currentUser", getUserData());
 
         List<Items> item = itemsService.getAllItems();
@@ -68,6 +68,20 @@ public class HomeController {
 
         List<Brands> brands = itemsService.getAllBrands();
         model.addAttribute("brands", brands);
+
+
+        List<Basket> baskets = (List<Basket>) session.getAttribute("basketItems");
+        model.addAttribute("currentUser", getUserData());
+        int total = 0;
+        if(baskets == null){
+            baskets = new ArrayList<>();
+        }
+        for(Basket b:baskets){
+            total += (b.getQuantity() * b.getItems().getPrice());
+
+        }
+
+        model.addAttribute("basket", baskets);
 
 
 //        System.out.println(item);
@@ -1091,6 +1105,22 @@ public class HomeController {
     }
 
 
+    @GetMapping(value = "/admin_picture_detail/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String admin_picture_detail(Model model, @PathVariable(name = "id") Long id) {
+
+        model.addAttribute("currentUser", getUserData());
+
+        Brands brands = itemsService.getBrand(id);
+        model.addAttribute("brands", brands);
+
+        List<Countries> countries = itemsService.getAllCountries();
+        model.addAttribute("countries", countries);
+
+        return "brands_detail";
+    }
+
+
     @GetMapping(value = "/viewimage/{url}", produces = {MediaType.IMAGE_JPEG_VALUE})
 //    @PreAuthorize("isAuthenticated()")
     public @ResponseBody byte[] viewItemPhoto(@PathVariable(name = "url") String url) throws IOException {
@@ -1170,7 +1200,6 @@ public class HomeController {
         Basket basket = new Basket();
         Items items1 = itemsService.getItem(id);
         basket.setItems(items1);
-        System.out.println(basket);
 
         if(items.size() > 0){
             for (Basket b: items){
@@ -1178,7 +1207,6 @@ public class HomeController {
                     int existQuantity = b.getQuantity();
                     b.setQuantity(existQuantity);
                     session.setAttribute("basketItems", items);
-                    System.out.println(items);
                     return "redirect:/basket";
                 }
             }
@@ -1189,7 +1217,6 @@ public class HomeController {
         items.add(basket);
         session.setAttribute("basketItems", items);
 
-        System.out.println(items);
 
         return "redirect:/basket";
     }

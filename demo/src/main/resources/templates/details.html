@@ -5,8 +5,8 @@
 
 
         <div class="cont" style="display: flex">
-            <div>
-                <div class="card" style="width: 200px; margin-top: 40px;">
+            <div class="left" style="width: 20%; margin: 0 auto;">
+                <div class="card" style="width: 250px; margin-top: 40px; margin-left: 38px">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item" style="background-color: #212529">
                             <span style="color: white" th:text="#{label.categories}"></span>
@@ -42,7 +42,7 @@
 
 
 
-                <div class="card" style="width: 200px; margin-top: 40px;">
+                <div class="card" style="width: 250px; margin-top: 40px; margin-left: 38px;">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"  style="background-color: #212529">
                             <span style="color: white" th:text="#{label.brands}">Brands</span>
@@ -71,41 +71,48 @@
                         </li>
                     </ul>
                 </div>
+
+
+                <div style="width: 250px; margin-top: 40px; margin-left: 38px;">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" style="background-color: #212529"><a href="#" style="color: white" th:text="#{label.payments}"></a></li>
+                        <li class="list-group-item" style="color: #235f6e;font-size: 40px"><i class="fa fa-cc-jcb"></i>&nbsp;&nbsp;<i class="fa fa-cc-visa"></i>&nbsp;&nbsp;<i class="fa fa-cc-paypal"></i></li>
+                        <li class="list-group-item" style="color: #235f6e;font-size: 40px"><i class="fa fa-cc-stripe"></i>&nbsp;&nbsp;<i class="fa fa-cc-mastercard"></i>&nbsp;&nbsp;<i class="fa fa-cc-amex"></i></li>
+                    </ul>
+                </div>
+
             </div>
 
 
-            <div>
-                <div class="row mt-5">
+            <div class="right" style="width: 70%;">
+                <form th:action="@{'/search'}" method="get" class="form-inline mr-auto" style="margin-top: 40px; margin-left: 28px;">
+                    <input class="form-control mr-sm-2" type="text" name="search" style="width: 64.8%;" th:placeholder="#{label.search}" aria-label="Search">
 
-                    <div class="col-6 offset-3">
+                    <button class="btn blue-gradient btn-rounded " style="color: white; width: 170px; margin-left: 3%; background-color: #212529;"type="submit" th:text="#{button.search}"></button>
+                </form>
 
+                <div class="" style="width: 83.7%!important; margin-left: 28px">
+                    <div class="">
                         <div class="card mb-3">
-                            <img class="card-img-top" th:src= "${item.large_picture_url}" alt="Card image cap">
+                            <img class="card-img-top" th:src= "${item.small_picture_url}" alt="Card image cap">
                             <div class="card-body">
                                 <h5 class="card-title" th:text="${item.name}"></h5>
                                 <p class="card-text" th:text="${item.description}"></p>
                                 <h5 class="card-title" th:text="${item.price} + '$'"></h5>
                                 <p class="card-text" th:text="'rating' + ${item.stars}"><small class="text-muted"></small></p>
                             </div>
-
-
                         </div>
-
                     </div>
-            </div>
+                </div>
                 <p style="text-align: center; margin-top: 20px;">SCREENSHOTS</p>
                 <div style="display:flex; margin-top: 30px;">
                     <div th:each="cat: ${pictures}" class="row" style="display: flex; padding-left: 40px; width: 350px; ">
                         <img style="height: 100px;" th:src="@{'/viewimage/'+${cat.url}}" alt="">
                     </div>
                 </div>
-
-
-
+            </div>
         </div>
-
-
-</div>
-</html>
+        <div style="height: 300px;"></div>
+    </div>
 </html>
 

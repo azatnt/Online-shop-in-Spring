@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark" xmlns:th = "http://www.thymeleaf.org" style="background-color: #212529" xmlns:sec = "http://www.thymeleaf.org/extras/spring-security">
-    <a class="navbar-brand" th:href="@{'/'}">E-Shop</a>
+    <a class="navbar-brand" th:href="@{'/'}">E-shop</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -24,22 +24,21 @@
             <li class="nav-item" sec:authorize="isAuthenticated()">
                 <a class="nav-link" href="JavaScript:void(0)" onclick="document.getElementById('logoutFormId').submit()">Logout</a>
             </li>
-            <form th:action="@{'/logout'}" method="post" id="logoutFormId" sec:authorize="isAuthenticated()">
-
-            </form>
             <li class="nav-item" sec:authorize="isAuthenticated()">
                 <a class="nav-link" th:href="@{'/profile'}" th:text="${currentUser.fullName}"></a>
             </li>
 
             <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" th:href="@{'/allItems'}" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')">Products</a>
+                <a class="nav-link" th:href="@{'/allItems'}" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')" th:text="#{label.products}"></a>
             </li>
+            <form th:action="@{'/logout'}" method="post" id="logoutFormId" sec:authorize="isAuthenticated()">
 
+            </form>
 
 
         </ul>
     </div>
-    <a style="text-decoration: none; color: white" class="nav-link" th:href="@{'/basket'}">Basket</a>
+    <a style="text-decoration: none; color: white" class="nav-link" th:href="@{'/basket'}" th:text="#{label.cart} + '(' + ${session.basketItems.size()} + ')' " th:unless="${session.basketItems == null}"></a>
 
     <!--    <a class="navbar-brand" th:href="@{'/admin'}">Admin</a>-->
 

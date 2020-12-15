@@ -1,4 +1,4 @@
-<html xmlns:th = "http://www.thymeleaf.org">
+<html xmlns:th = "http://www.thymeleaf.org" xmlns:sec = "http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Title</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -22,8 +22,30 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-            <a class="nav-link" href="/admin">Brands</a>
-            <a class="nav-link" href="/countries">Coutries</a>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" th:href="@{'/allItems'}" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')" th:text="#{label.AllItems}"></a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" th:href="@{'/admin'}" sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{label.Brands}"></a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" th:href="@{'/countries'}" sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{label.Countries}"></a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" th:href="@{'/categories'}" sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{label.Categories}"></a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" th:href="@{'/allUsers'}" sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{label.Users}"></a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" th:href="@{'/allRoles'}" sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{label.Roles}"></a>
+            </li>
+            <!--        <li class="nav-item" sec:authorize="isAuthenticated()">-->
+            <!--            <a class="nav-link" th:href="@{'/pictures'}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')">Pictures</a>-->
+            <!--        </li>-->
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" th:href="@{'/orders'}" sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{label.Orders}"></a>
+            </li>
         </div>
     </div>
 </nav>
@@ -96,8 +118,8 @@
                     </select>
 
                     <div class="form-group">
-                        <label>
-                            Brand
+                        <label th:text="#{label.brand}">
+
                         </label>
                         <select class="form-control" name="brand_id" id="">
                             <option th:each="bnd : ${brands}" th:text="${bnd.name}" th:value="${bnd.id}" th:selected="${items!=null&&items.brand!=null&&bnd.id==items.brand.id}"></option>
@@ -108,13 +130,13 @@
 
 
                 <div class="form-group">
-                    <button class="btn btn-success btn-sm float-right">Save</button>
+                    <button class="btn btn-success btn-sm float-right" th:text="#{button.save_item}"></button>
                 </div>
             </form>
 
             <form th:action="@{'/deleteItem'}" method="post">
                 <input type="hidden" name="id" th:value="${items!=null?items.id:''}">
-                <button type="submit" class="btn btn-danger btn-sm float-right mr-2">Delete</button>
+                <button type="submit" class="btn btn-danger btn-sm float-right mr-2" th:text="#{button.delete_item}"></button>
             </form>
 
 

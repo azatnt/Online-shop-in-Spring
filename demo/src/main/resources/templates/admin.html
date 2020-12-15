@@ -20,28 +20,31 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" th:href="@{'/allItems'}" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')">All Items</a>
-            </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" th:href="@{'/admin'}" sec:authorize="hasRole('ROLE_ADMIN')">Brands</a>
-            </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" th:href="@{'/countries'}" sec:authorize="hasRole('ROLE_ADMIN')">Countries</a>
-            </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" th:href="@{'/categories'}" sec:authorize="hasRole('ROLE_ADMIN')">Categories</a>
-            </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" th:href="@{'/pictures'}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')">Pictures</a>
-            </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" th:href="@{'/orders'}" sec:authorize="hasRole('ROLE_ADMIN')">Orders</a>
-            </li>
-
-        </div>
+    <div class="navbar-nav">
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" th:href="@{'/allItems'}" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')" th:text="#{label.AllItems}"></a>
+        </li>
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" th:href="@{'/admin'}" sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{label.Brands}"></a>
+        </li>
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" th:href="@{'/countries'}" sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{label.Countries}"></a>
+        </li>
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" th:href="@{'/categories'}" sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{label.Categories}"></a>
+        </li>
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" th:href="@{'/allUsers'}" sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{label.Users}"></a>
+        </li>
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" th:href="@{'/allRoles'}" sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{label.Roles}"></a>
+        </li>
+<!--        <li class="nav-item" sec:authorize="isAuthenticated()">-->
+<!--            <a class="nav-link" th:href="@{'/pictures'}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')">Pictures</a>-->
+<!--        </li>-->
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" th:href="@{'/orders'}" sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{label.Orders}"></a>
+        </li>
     </div>
 </nav>
 
@@ -52,7 +55,7 @@
 
         </div>
         <div>
-            <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal">ADD NEW</button>
+            <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal" th:text="#{button.add}"></button>
         </div>
 
     </div>
@@ -68,9 +71,9 @@
                 <th scope="col"></th>
 
 
-                <th scope="col">Name</th>
+                <th scope="col" th:text="#{label.name}"></th>
                 <th scope="col"></th>
-                <th scope="col">Country</th>
+                <th scope="col" th:text="#{label.Countries}"></th>
             </tr>
             </thead>
             <tbody>
@@ -88,8 +91,7 @@
 
                 <td style="display: flex;">
                     <a th:href="@{'/admin_brand_detail/' + ${bnd.id}}">
-                        <button class="btn btn-info">
-                            Detail
+                        <button class="btn btn-info" th:text="#{button.edit}">
                         </button>
                     </a>
 <!--                    <div>-->
@@ -175,19 +177,19 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title">Add News</h4>
+                <h4 class="modal-title" th:text="#{label.addBrand}"></h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
                 <form th:action="@{'/addBrand'}" method="post">
                     <div class="form-group ">
-                        <label class="control-label " for="title"> Name </label>
+                        <label class="control-label " for="title" th:text="#{label.name}"> </label>
                         <input class="form-control" id="title"  name="name" type="text"/>
                     </div>
 
                     <div class="form-group">
-                        <label>
-                            Country
+                        <label th:text="#{label.Countries}">
+
                         </label>
                         <select class="form-control" name="country_id" id="">
                             <option th:each="bnd : ${countries}" th:text="${bnd.name}" th:value="${bnd.id}"></option>
@@ -195,8 +197,8 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="submit" name="add" value="add" class="btn btn-success">ADD</button>
-                        <button type="submit" name="close" value="close" class="btn btn-secondary">CLOSE</button>
+                        <button type="submit" name="add" value="add" class="btn btn-success" th:text="#{button.add}"></button>
+<!--                        <button type="submit" name="close" value="close" class="btn btn-secondary">CLOSE</button>-->
                     </div>
                 </form>
             </div>
