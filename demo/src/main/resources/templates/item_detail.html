@@ -109,10 +109,10 @@
        </span>
                     </label>
                     <select class="select form-control" id="inTop" name="inTop">
-                        <option th:value="${items!=null?items.inTop:''}" th:text="#{label.inTopYes}">
+                        <option th:value="true" th:text="#{label.inTopYes}">
 
                         </option>
-                        <option th:value="${items!=null?items.inTop:''}" th:text="#{label.inTopNo}">
+                        <option th:value="false" th:text="#{label.inTopNo}">
 
                         </option>
                     </select>

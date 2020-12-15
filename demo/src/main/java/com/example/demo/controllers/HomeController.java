@@ -110,17 +110,17 @@ public class HomeController {
                           @RequestParam(name = "rating") int rating,
                           @RequestParam(name = "small_picture") String small_picture,
                           @RequestParam(name = "large_picture") String large_picture,
-                          @RequestParam(name = "inTop") String inTop,
+                          @RequestParam(name = "inTop") boolean inTop,
                           @RequestParam(name = "brand_id") Long id,
                           @RequestParam(name = "cat") List<Long> catId)
 
     {
 
-        boolean InTop = false;
-
-        if (inTop.equals("Yes")) {
-            InTop = true;
-        }
+//        boolean InTop = false;
+//
+//        if (inTop.equals("Yes")) {
+//            InTop = true;
+//        }
 
 
         long millis=System.currentTimeMillis();
@@ -135,9 +135,22 @@ public class HomeController {
             for(Long cat: catId){
                 categories.add(itemsService.getCategory(cat));
             }
-            itemsService.addItem(new Items(null, name, description, price,
-                    amount, rating, small_picture,
-                    large_picture, date_added, InTop, bnd, categories));
+//            itemsService.addItem(new Items(null, name, description, price,
+//                    amount, rating, small_picture,
+//                    large_picture, date_added, InTop, bnd, categories));
+            Items items = new Items();
+            items.setName(name);
+            items.setDescription(description);
+            items.setPrice(price);
+            items.setAmount(amount);
+            items.setStars(rating);
+            items.setSmall_picture_url(small_picture);
+            items.setLarge_picture_url(large_picture);
+            items.setDateAdded(date_added);
+            items.setInTop(inTop);
+            items.setBrand(bnd);
+            items.setCategories(categories);
+            itemsService.addItem(items);
         }
         return "redirect:/allItems";
     }
@@ -645,14 +658,14 @@ public class HomeController {
                            @RequestParam(name = "rating") int rating,
                            @RequestParam(name = "small_picture") String small_picture,
                            @RequestParam(name = "large_picture") String large_picture,
-                           @RequestParam(name = "inTop") String inTop,
+                           @RequestParam(name = "inTop") boolean inTop,
                            @RequestParam(name = "brand_id") Long brandId)
     {
-        boolean InTop = false;
-
-        if (inTop.equals("Yes")) {
-            InTop = true;
-        }
+//        boolean InTop = false;
+//
+//        if (inTop.equals("Yes")) {
+//            InTop = true;
+//        }
 
         Items items = itemsService.getItem(id);
         if (items!=null){
@@ -667,7 +680,7 @@ public class HomeController {
                 items.setStars(rating);
                 items.setSmall_picture_url(small_picture);
                 items.setLarge_picture_url(large_picture);
-                items.setInTop(InTop);
+                items.setInTop(inTop);
                 items.setBrand(brands);
                 itemsService.saveItem(items);
             }
