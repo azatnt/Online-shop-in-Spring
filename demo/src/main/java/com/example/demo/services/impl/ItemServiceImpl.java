@@ -83,6 +83,11 @@ public class ItemServiceImpl implements ItemsService {
         return itemsRepository.findAllByNameLikeAndPriceBetweenOrderByPriceDesc(name, priceFrom, priceTo);
     }
 
+    @Override
+    public List<Items> getAllItemsByCategoryId(Long id) {
+        return itemsRepository.findAllByCategoriesId(id);
+    }
+
 
     @Override
     public List<Items> filterPriceAsc(String name, int priceFrom, int priceTo) {

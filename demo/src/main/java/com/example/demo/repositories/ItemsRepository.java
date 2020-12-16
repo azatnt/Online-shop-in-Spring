@@ -22,6 +22,6 @@ public interface ItemsRepository extends JpaRepository<Items, Long> {
     List<Items> findAllByBrandId(Long id);
     List<Items> findAllByBrandIdAndPriceBetweenOrderByPriceAsc(Long id, int priceFrom, int priceTo);
     List<Items> findAllByBrandIdAndPriceBetweenOrderByPriceDesc(Long id, int priceFrom, int priceTo);
-
+    List<Items> findAllByCategoriesId(Long id);
 
 }

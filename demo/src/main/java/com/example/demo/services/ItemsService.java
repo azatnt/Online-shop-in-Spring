@@ -17,6 +17,8 @@ public interface ItemsService {
     List<Items> findAllByNameLikeOrderByPriceDesc(String name);
     List<Items> filterPriceAsc(String name, int priceFrom, int priceTo);
     List<Items> filterPriceDesc(String name, int priceFrom, int priceTo);
+    List<Items> getAllItemsByCategoryId(Long id);
+
 
     List<Brands> getAllBrands();
     Brands addBrand(Brands brand);
@@ -29,6 +31,7 @@ public interface ItemsService {
     Countries saveCountry(Countries country);
     Countries getCountry(Long id);
     void deleteCountry(Countries country);
+
 
     List<Items> findAllByBrandId(Long id);
     List<Items> findAllByBrandIdAndPriceAsc(Long id, int priceFrom, int priceTo);

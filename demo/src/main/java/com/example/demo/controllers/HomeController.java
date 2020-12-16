@@ -69,6 +69,8 @@ public class HomeController {
         List<Brands> brands = itemsService.getAllBrands();
         model.addAttribute("brands", brands);
 
+        List<Categories> categories = itemsService.getAllCategories();
+        model.addAttribute("categories", categories);
 
         List<Basket> baskets = (List<Basket>) session.getAttribute("basketItems");
         model.addAttribute("currentUser", getUserData());
@@ -94,6 +96,12 @@ public class HomeController {
     public String topItems(Model model) {
 
         model.addAttribute("currentUser", getUserData());
+
+        List<Brands> brands = itemsService.getAllBrands();
+        model.addAttribute("brands", brands);
+
+        List<Categories> categories = itemsService.getAllCategories();
+        model.addAttribute("categories", categories);
 
         List<Items> item = itemsService.getOnTop();
         model.addAttribute("item", item);
@@ -708,6 +716,12 @@ public class HomeController {
     @PreAuthorize("isAuthenticated()")
     public String profile(Model model){
         model.addAttribute("currentUser", getUserData());
+
+        List<Brands> brands = itemsService.getAllBrands();
+        model.addAttribute("brands", brands);
+
+        List<Categories> categories = itemsService.getAllCategories();
+        model.addAttribute("categories", categories);
         return "profile";
     }
 
@@ -1344,6 +1358,57 @@ public class HomeController {
             itemsService.deleteOrder(order);
         }
         return "redirect:/orders";
+    }
+
+
+
+    @GetMapping("/searchcategory/{Id}")
+    public String categorySearch(Model model, @PathVariable(name = "Id") Long id){
+        if (id != null){
+            List<Items> items = itemsService.getAllItemsByCategoryId(id);
+            model.addAttribute("items", items);
+
+            model.addAttribute("brand_result", 0);
+
+            List<Brands> brands = itemsService.getAllBrands();
+            model.addAttribute("brands", brands);
+
+            List<Categories> categories = itemsService.getAllCategories();
+            model.addAttribute("categories", categories);
+
+            model.addAttribute("currentUser", getUserData());
+
+            return "search";
+        }
+        else {
+            return "redirect:/";
+        }
+
+    }
+
+
+    @GetMapping("/searchbrand/{Id}")
+    public String brandSearch(Model model, @PathVariable(name = "Id") Long id){
+        if (id != null){
+            List<Items> items = itemsService.findAllByBrandId(id);
+            model.addAttribute("items", items);
+
+            model.addAttribute("brand_result", id);
+
+            List<Brands> brands = itemsService.getAllBrands();
+            model.addAttribute("brands", brands);
+
+            List<Categories> categories = itemsService.getAllCategories();
+            model.addAttribute("categories", categories);
+
+            model.addAttribute("currentUser", getUserData());
+
+            return "search";
+        }
+        else {
+            return "redirect:/";
+        }
+
     }
 
 
