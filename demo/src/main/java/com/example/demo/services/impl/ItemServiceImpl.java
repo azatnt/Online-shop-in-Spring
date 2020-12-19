@@ -28,6 +28,8 @@ public class ItemServiceImpl implements ItemsService {
 
     @Autowired OrderRepository orderRepository;
 
+    @Autowired CommentRepository commentRepository;
+
     @Override
     public Items addItem(Items item) {
         return itemsRepository.save(item);
@@ -220,6 +222,11 @@ public class ItemServiceImpl implements ItemsService {
     }
 
     @Override
+    public List<Comments> findAllByItemsIdOrderByDateAddedDesc(Long id) {
+        return commentRepository.findAllByItemsIdOrderByDateAddedDesc(id);
+    }
+
+    @Override
     public Order addOrder(Order order) {
         return orderRepository.save(order);
     }
@@ -239,5 +246,29 @@ public class ItemServiceImpl implements ItemsService {
         orderRepository.delete(order);
     }
 
+    @Override
+    public Comments addComment(Comments comments) {
+        return commentRepository.save(comments);
+    }
+
+    @Override
+    public List<Comments> getAllComments() {
+        return commentRepository.findAll();
+    }
+
+    @Override
+    public Comments getComment(Long id) {
+        return commentRepository.getOne(id);
+    }
+
+    @Override
+    public void deleteComment(Comments comment) {
+        commentRepository.delete(comment);
+    }
+
+    @Override
+    public Comments saveComment(Comments comment) {
+        return commentRepository.save(comment);
+    }
 
 }

@@ -52,11 +52,19 @@ public interface ItemsService {
     Pictures getPicture(Long id);
     void deletePicture(Pictures pictures);
     List<Pictures> findAllByItemId(Long id);
+    List<Comments> findAllByItemsIdOrderByDateAddedDesc(Long id);
 
 
     Order addOrder(Order order);
     List<Order> getAllOrders();
     Order getOrder(Long id);
     void deleteOrder(Order order);
+
+
+    Comments addComment(Comments comments);
+    List<Comments> getAllComments();
+    Comments getComment(Long id);
+    void deleteComment(Comments comment);
+    Comments saveComment(Comments comments);
 
 }

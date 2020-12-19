@@ -32,6 +32,6 @@ public class Users {
     @Column(name = "user_avatar")
     private String userAvatar;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Roles> roles;
 }

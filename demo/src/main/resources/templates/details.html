@@ -1,8 +1,34 @@
 <html xmlns:th = "http://www.thymeleaf.org"
-     xmlns:layout = "http://ultraq.net.nz/thymeleaf/layout" layout:decorator = "layout/main.html">
+     xmlns:layout = "http://ultraq.net.nz/thymeleaf/layout" layout:decorator = "layout/main.html"
+      xmlns:sec = "http://www.thymeleaf.org/extras/spring-security">
 
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css" rel="stylesheet" />
     <div layout:fragment = "block-content">
 
+
+        <style>
+            .slider {
+                /*border: 1px solid black;*/
+                width: 650px;
+                margin-left: 140px;
+                height: 110px;
+            }
+
+           
+            .slick-prev:before, .slick-next:before {
+                font-family: 'slick';
+                font-size: 20px;
+                line-height: 1;
+                opacity: .75;
+                color: gray !important;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+
+        </style>
 
         <div class="cont" style="display: flex">
             <div class="left" style="width: 20%; margin: 0 auto;">
@@ -93,15 +119,91 @@
                         </div>
                     </div>
                 </div>
-                <p style="text-align: center; margin-top: 20px;">SCREENSHOTS</p>
-                <div style="display:flex; margin-top: 30px;">
-                    <div th:each="cat: ${pictures}" class="row" style="display: flex; padding-left: 40px; width: 350px; ">
-                        <img style="height: 100px;" th:src="@{'/viewimage/'+${cat.url}}" alt="">
+                <p style="margin-left: 400px; margin-top: 40px;">SCREENSHOTS</p>
+
+                <div class="slider" >
+                    <div th:each="cat: ${pictures}">
+                        <img style="height: 100px;" th:src="@{'/viewimage/'+${cat.url}}" alt="Image" draggable="false">
                     </div>
                 </div>
+
+
+                <div style="margin-top: 90px; margin-left: 30px;">
+                    <div sec:authorize="isAnonymous()">
+                        <div style="width: 850px;" class="alert alert-primary" role="alert">
+                            <a style="color: black" href="/login"><span th:text="#{label.toComment}"></span></a>
+                        </div>
+                    </div>
+
+                    <form th:action="@{/add_comment}" method="post" sec:authorize="isAuthenticated()" style="width: 450px; display: flex">
+                        <div>
+                            <input type="hidden" th:value="${item.id}" name="item_id">
+                            <textarea class="form-control" th:placeholder="#{label.write}" name="comment" style="height: 40px; width: 670px;"></textarea>
+                        </div>
+                        <div style="margin-left: 20px;">
+                            <button type="submit" class="btn btn-primary" style="width: 150px;"  th:text="#{label.addComment}"></button>
+                        </div>
+                    </form>
+
+                    <div>
+                        <a href="#" style="text-decoration: none;" class="comment-btn">
+                            <p th:text="${comments.size()} + ' ' + #{label.comments}"></p>
+                        </a>
+                    </div>
+
+                    <div class="comment_form" id="comment_form" th:each="com: ${comments}" style="display: none; width: 850px; margin-right: 50px; justify-content: space-between">
+                        <div style="display: flex; justify-content: space-between">
+                            <h5 style="width: 200px;" th:text="${com.users.fullName}"></h5>
+                            <p style="width: 190px; font-size: 12px; padding-left: 50px;" th:text="${com.dateAdded}"></p>
+
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-right: 5px;">
+                            <p style="margin-right: 30px; width: 600px; height: 30px;" th:text="${com.comment}"></p>
+
+                            <div sec:authorize="isAuthenticated()" th:if="${com.users.id == currentUser.id} or ${currentUser.id == 1} or ${currentUser.id == 3} " style="display: flex">
+                                <button class="btn btn-success btn-sm" style="height: 31px; margin-right: 5px;" data-toggle="modal" th:data-target="${'#exampleModal'+com.id}"><i class="fa fa-edit"></i></button>
+                                <form th:action="@{/delete_comment}" method="post">
+                                    <input type="hidden" th:value="${com.id}" name="com_id">
+                                    <button type="submit" class="btn btn-danger btn-sm" style="height: 31px;"><i class="fa fa-trash"></i></button>
+                                </form>
+                            </div>
+
+                            <div class="modal fade" th:id="${'exampleModal'+com.id}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <!--                <h4 class="modal-title" th:text="#{button.add_item}"></h4>-->
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form th:action="@{'/edit_comment'}" method="post">
+                                                <h2 class="text-center" th:text="#{label.edit_comment}"></h2>
+                                                <input type="hidden" th:value="${com.id}" name="com_id">
+                                                <div class="form-group">
+                                                    <label th:text="#{label.text}"></label>
+                                                    <input name="comment" type="text" th:value="${com.comment}" class="form-control" required>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-success" th:text="#{button.edit}"></button>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div style="height: 300px;"></div>
     </div>
+
+
 </html>
 

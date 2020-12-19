@@ -232,6 +232,10 @@ public class HomeController {
         List<Categories> categories = itemsService.getAllCategories();
         model.addAttribute("categories", categories);
 
+        List<Comments> comments = itemsService.findAllByItemsIdOrderByDateAddedDesc(id);
+        model.addAttribute("comments", comments);
+
+
 
         return "details";
     }
@@ -1409,6 +1413,44 @@ public class HomeController {
             return "redirect:/";
         }
 
+    }
+
+    @PostMapping(value = "/add_comment")
+    public String addComment(@RequestParam(name = "item_id") Long id,
+                             @RequestParam(name = "comment") String comment){
+        Items item = itemsService.getItem(id);
+        Users user = getUserData();
+        Comments comments = new Comments();
+
+
+        long millis=System.currentTimeMillis();
+        java.sql.Date date_added = new java.sql.Date(millis);
+
+        comments.setComment(comment);
+        comments.setDateAdded(date_added);
+        comments.setItems(item);
+        comments.setUsers(user);
+
+        itemsService.saveComment(comments);
+        return "redirect:/detail/"+id;
+    }
+
+    @PostMapping(value = "/delete_comment")
+    public String deleteComment(@RequestParam(name = "com_id") Long id){
+        Comments comment = itemsService.getComment(id);
+
+        itemsService.deleteComment(comment);
+        return "redirect:/detail/"+comment.getItems().getId();
+    }
+
+
+    @PostMapping(value = "/edit_comment")
+    public String editComment(@RequestParam(name = "com_id") Long id,
+                              @RequestParam(name = "comment") String comment){
+        Comments com = itemsService.getComment(id);
+        com.setComment(comment);
+        itemsService.saveComment(com);
+        return "redirect:/detail/"+com.getItems().getId();
     }
 
 

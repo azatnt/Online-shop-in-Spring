@@ -52,5 +52,32 @@
     <h6 style="color: white; margin-top: 16px;">2020 Copyright Reserved</h6>
 </div>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css" rel="stylesheet" />
+
+    <script type="text/javascript">
+        $(document).on('click', '.comment-btn', function(event){
+        // $('.comment-btn').click(function(){
+            event.preventDefault();
+            console.log('works');
+            $('.comment_form').fadeToggle();
+            // return false;
+        });
+
+        $(document).ready(function () {
+            $('.slider').slick({
+                slidesToShow: 3,
+                slidesToScroll: 3,
+                dots: true,
+                infinite: true,
+                cssEase: 'linear',
+                arrow: true
+            });
+        });
+    </script>
+
 </body>
 </html>
