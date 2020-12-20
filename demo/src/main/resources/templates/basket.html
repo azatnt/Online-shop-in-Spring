@@ -24,32 +24,29 @@
                 <div class="card" style="width: 250px; margin-top: 40px; margin-left: 30px">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item" style="background-color: #212529">
-                            <span style="color: white" th:text="#{label.categories}"></span>
+                            <span style="color: white; font-weight: bold;" th:text="#{label.categories}"></span>
                         </li>
                         <li class="list-group-item">
-                            <a href=""><button name="id" class="btn btn-outline-dark btn-sm"><i class="fa fa-shopping-cart"  th:href="@{'/'}" th:text="#{button.all_items}"></i></button>
+                            <a href="/">
+                                <button name="id" class="btn btn-outline-dark btn-sm">
+                                    <img src="https://image.freepik.com/free-vector/online-shop-logo_18099-275.jpg" th:text="' ' +#{label.allItems}" style="height: 20px; width: 20px;">
+                                </button>
                             </a>
                         </li>
-                        <li class="list-group-item">
-                            <a href=""><button class="btn btn-outline-dark btn-sm" ><i class="fa fa-mobile" th:href="@{'/'}" th:text="#{button.phones}">Phones</i></button></a>
+                        <li class="list-group-item" th:each="category : ${categories}">
+                            <a th:href="@{'/searchcategory/' + ${category.id}}">
+                                <button class="btn btn-outline-dark btn-sm">
+                                    <img th:src="${category.logo_url} + ' '" th:text="' ' +${category.name}" style="height: 20px; width: 20px;">
+                                </button>
+                            </a>
                         </li>
+
                         <li class="list-group-item">
-                            <a href=""><button class="btn btn-outline-dark btn-sm " ><i class="fa fa-laptop" th:href="@{'/'}" th:text="#{button.laptops}">Laptops</i></button></a>
-                        </li>
-                        <!--                    <li class="list-group-item">-->
-                        <!--                        <a href=""><button class="btn btn-outline-dark btn-sm"><i class="fa fa-stopwatch">Watches</i></button></a>-->
-                        <!--                    </li>-->
-                        <li class="list-group-item">
-                            <a href=""><button class="btn btn-outline-dark btn-sm"><i class="fa fa-tv" th:href="@{'/'}" th:text="#{button.televisions}">Televisions</i></button></a>
-                        </li>
-                        <!--                    <li class="list-group-item">-->
-                        <!--                        <a href=""><button class="btn btn-outline-dark btn-sm"><i class="fa fa-joystick">Game Consoles</i></button></a>-->
-                        <!--                    </li>-->
-                        <li class="list-group-item">
-                            <a href=""><button class="btn btn-outline-dark btn-sm" ><i class="fa fa-shopping-bag" th:href="@{'/'}" th:text="#{button.others}">Others</i></button></a>
-                        </li>
-                        <li class="list-group-item">
-                            <a th:href="@{'/topItem'}"><button class="btn btn-outline-dark btn-sm" ><i class="fa fa-arrow-alt-to-top" th:href="@{'/'}" th:text="#{button.inTop}"></i></button></a>
+                            <a th:href="@{'/topItem'}">
+                                <button class="btn btn-outline-dark btn-sm" >
+                                    <img src="https://image.shutterstock.com/image-vector/top-logo-260nw-678885469.jpg" th:text="' ' + #{button.inTop}" style="height: 20px; width: 20px;" alt="">
+                                </button>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -60,29 +57,21 @@
                 <div class="card" style="width: 250px; margin-top: 40px; margin-left: 30px;">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"  style="background-color: #212529">
-                            <span style="color: white" th:text="#{label.brands}"></span>
+                            <span style="color: white; font-weight: bold" th:text="#{label.brands}"></span>
                         </li>
                         <li class="list-group-item">
-                            <a href=""><button name="id" class="btn btn-outline-dark btn-sm"><i class="fa fa-shopping-cart"  th:href="@{'/'}" th:text="#{button.all_items}"></i></button>
+                            <a href="/">
+                                <button name="id" class="btn btn-outline-dark btn-sm">
+                                    <span th:text="#{label.allBrands}"></span>
+                                </button>
                             </a>
                         </li>
-                        <li class="list-group-item">
-                            <a href=""><button class="btn btn-outline-dark btn-sm" ><i class="fa fa-mobile" th:href="@{'/'}" th:text="#{button.phones}">Phones</i></button></a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href=""><button class="btn btn-outline-dark btn-sm " ><i class="fa fa-laptop" th:href="@{'/'}" th:text="#{button.laptops}">Laptops</i></button></a>
-                        </li>
-                        <!--                    <li class="list-group-item">-->
-                        <!--                        <a href=""><button class="btn btn-outline-dark btn-sm"><i class="fa fa-stopwatch">Watches</i></button></a>-->
-                        <!--                    </li>-->
-                        <li class="list-group-item">
-                            <a href=""><button class="btn btn-outline-dark btn-sm"><i class="fa fa-tv" th:href="@{'/'}" th:text="#{button.televisions}">Televisions</i></button></a>
-                        </li>
-                        <!--                    <li class="list-group-item">-->
-                        <!--                        <a href=""><button class="btn btn-outline-dark btn-sm"><i class="fa fa-joystick">Game Consoles</i></button></a>-->
-                        <!--                    </li>-->
-                        <li class="list-group-item">
-                            <a href=""><button class="btn btn-outline-dark btn-sm" ><i class="fa fa-shopping-bag" th:href="@{'/'}" th:text="#{button.others}">Others</i></button></a>
+                        <li class="list-group-item" th:each="bnd : ${brands}">
+                            <a th:href="@{'/searchbrand/' + ${bnd.id}}">
+                                <button class="btn btn-outline-dark btn-sm">
+                                    <span th:text="' ' +${bnd.name}"></span>
+                                </button>
+                            </a>
                         </li>
                     </ul>
                 </div>

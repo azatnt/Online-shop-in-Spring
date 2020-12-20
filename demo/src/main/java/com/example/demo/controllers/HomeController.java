@@ -1214,6 +1214,12 @@ public class HomeController {
         model.addAttribute("basket", baskets);
         model.addAttribute("total", total);
 
+        List<Brands> brands = itemsService.getAllBrands();
+        model.addAttribute("brands", brands);
+
+        List<Categories> categories = itemsService.getAllCategories();
+        model.addAttribute("categories", categories);
+
 
         return "basket";
     }
@@ -1236,7 +1242,7 @@ public class HomeController {
             for (Basket b: items){
                 if(b.compareTo(basket) > 0){
                     int existQuantity = b.getQuantity();
-                    b.setQuantity(existQuantity);
+                    b.setQuantity(existQuantity + 1);
                     session.setAttribute("basketItems", items);
                     return "redirect:/basket";
                 }
